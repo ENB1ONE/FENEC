@@ -92,20 +92,49 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
         </div>
       </div>
 
+      {/* Front / Back Quick Selector */}
+      <div className="w-full flex bg-slate-800/80 p-1 rounded-xl border border-slate-700/80 mb-3 text-xs font-bold no-print">
+        <button
+          type="button"
+          onClick={() => setIsFlipped(false)}
+          className={`flex-1 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+            !isFlipped
+              ? 'bg-amber-500 text-slate-950 shadow-md font-extrabold'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <Award className="w-3.5 h-3.5" />
+          <span>Frente (Identificação)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsFlipped(true)}
+          className={`flex-1 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+            isFlipped
+              ? 'bg-blue-600 text-white shadow-md font-extrabold'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <QrIcon className="w-3.5 h-3.5" />
+          <span>Verso (QR Code Oficial)</span>
+        </button>
+      </div>
+
       {/* 3D Flip Container */}
       <div 
-        className="w-full perspective-1000 cursor-pointer select-none"
+        className="w-full card-perspective cursor-pointer select-none"
         onClick={() => setIsFlipped(!isFlipped)}
       >
         <div 
-          className={`relative w-full aspect-[1/1.58] transition-transform duration-700 transform-style-3d ${
-            isFlipped ? 'rotate-y-180' : ''
+          className={`card-flipper aspect-[1/1.58] ${
+            isFlipped ? 'is-flipped' : ''
           }`}
         >
           {/* =========================================
               FRENTE DA CARTEIRINHA
              ========================================= */}
-          <div className="absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/40 bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 text-white flex flex-col justify-between p-5 print-area">
+          <div className="card-face card-face-front rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/40 bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-950 text-white flex flex-col justify-between p-5 print-area">
             {/* Hologram sheen overlay */}
             <div className="absolute inset-0 pointer-events-none animate-shimmer opacity-40 z-10" />
 
@@ -246,7 +275,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
           {/* =========================================
               VERSO DA CARTEIRINHA
              ========================================= */}
-          <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/40 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 text-white flex flex-col justify-between p-5 print-area">
+          <div className="card-face card-face-back rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/40 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 text-white flex flex-col justify-between p-5 print-area">
             {/* Hologram sheen */}
             <div className="absolute inset-0 pointer-events-none animate-shimmer opacity-30 z-10" />
 
@@ -322,7 +351,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
           className="flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold py-2.5 px-3 rounded-xl border border-slate-700 shadow transition-all"
         >
           <RotateCw className="w-4 h-4 text-cyan-400" />
-          <span>Girar</span>
+          <span>{isFlipped ? 'Ver Frente' : 'Girar Verso'}</span>
         </button>
 
         <button

@@ -1,17 +1,93 @@
 @import "tailwindcss";
 
+/* 3D Card Flip Styles with Full WebKit/Safari/iOS Support */
+.card-perspective {
+  perspective: 1200px;
+  -webkit-perspective: 1200px;
+}
+
+.card-flipper {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.card-flipper.is-flipped {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  background-color: #0b1120;
+}
+
+.card-face-front {
+  transform: rotateY(0deg) translateZ(1px);
+  -webkit-transform: rotateY(0deg) translateZ(1px);
+  z-index: 2;
+}
+
+.card-face-back {
+  transform: rotateY(180deg) translateZ(1px);
+  -webkit-transform: rotateY(180deg) translateZ(1px);
+  z-index: 1;
+}
+
+/* Fail-safe visibility transition for Safari to prevent overlapping/bleed-through */
+@media not print {
+  .card-flipper.is-flipped .card-face-front {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease 0.25s, visibility 0s linear 0.45s;
+  }
+  .card-flipper:not(.is-flipped) .card-face-front {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.2s ease 0.2s, visibility 0s linear 0s;
+  }
+
+  .card-flipper:not(.is-flipped) .card-face-back {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease 0.25s, visibility 0s linear 0.45s;
+  }
+  .card-flipper.is-flipped .card-face-back {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.2s ease 0.2s, visibility 0s linear 0s;
+  }
+}
+
 @layer utilities {
   .perspective-1000 {
     perspective: 1000px;
+    -webkit-perspective: 1000px;
   }
   .transform-style-3d {
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
   }
   .backface-hidden {
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   .rotate-y-180 {
     transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
   }
 }
 
