@@ -37,6 +37,21 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Silent sync to keep cached student details 100% up-to-date with server
+  React.useEffect(() => {
+    if (student?.codigo_uso) {
+      fetch(apiUrl(`/api/public/validate/${encodeURIComponent(student.codigo_uso)}`))
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.valid && data.student) {
+            setStudent(data.student);
+            localStorage.setItem('fenec_student_data', JSON.stringify(data.student));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [student?.codigo_uso]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!cpf.trim()) {
@@ -86,8 +101,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
         {/* Welcome & Logout header */}
         <div className="flex items-center justify-between bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-6 backdrop-blur shadow-md no-print">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center font-bold">
-              <GraduationCap className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/50 p-1 flex items-center justify-center flex-shrink-0">
+              <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
             </div>
             <div>
               <p className="text-xs text-slate-400 font-medium">Estudante Conectado</p>
@@ -104,8 +119,13 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
           </button>
         </div>
 
-        {/* Digital Card Renderer */}
-        <DigitalCard student={student} onOpenValidator={onOpenValidator} />
+        {/* Digital Card Renderer - Abre direto em Tela Cheia */}
+        <DigitalCard 
+          student={student} 
+          onOpenValidator={onOpenValidator} 
+          onLogout={handleLogout}
+          defaultFullscreen={true}
+        />
       </div>
     );
   }

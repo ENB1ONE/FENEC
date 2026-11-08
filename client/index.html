@@ -13,6 +13,11 @@
     <meta name="apple-mobile-web-app-title" content="FENEC Digital" />
     <meta name="application-name" content="FENEC Digital" />
 
+    <!-- Anti-Stale Cache-Control -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <!-- Icons & Manifest -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="alternate icon" type="image/png" href="./pwa-192.png" />
@@ -30,12 +35,15 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      // Register Service Worker for PWA installation
+      // Register Service Worker for PWA installation & continuous auto-updates
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('./sw.js')
             .then(function(reg) {
-              console.log('FENEC PWA Service Worker registrado com sucesso');
+              reg.update();
+              setInterval(function() {
+                reg.update();
+              }, 30000);
             })
             .catch(function(err) {
               console.warn('Registro de Service Worker:', err);

@@ -15,21 +15,30 @@ import {
   Sparkles, 
   School,
   Maximize2,
+  Minimize2,
   X,
-  Smartphone
+  Smartphone,
+  LogOut
 } from 'lucide-react';
 
 interface DigitalCardProps {
   student: Student;
   onOpenValidator?: (codigoUso: string) => void;
+  onLogout?: () => void;
+  defaultFullscreen?: boolean;
 }
 
-export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidator }) => {
+export const DigitalCard: React.FC<DigitalCardProps> = ({ 
+  student, 
+  onOpenValidator,
+  onLogout,
+  defaultFullscreen = true
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(defaultFullscreen);
 
   // Touch swipe gesture refs
   const touchStartX = useRef<number | null>(null);
@@ -349,13 +358,27 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
               </span>
             </div>
 
-            <button
-              onClick={() => setIsFullscreen(false)}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-slate-700 shadow transition-colors"
-            >
-              <X className="w-4 h-4 text-rose-400" />
-              <span>Fechar</span>
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setIsFullscreen(false)}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 border border-slate-700 transition-colors shadow-sm"
+                title="Minimizar tela cheia e acessar o portal"
+              >
+                <Minimize2 className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-[11px]">Minimizar</span>
+              </button>
+
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 border border-rose-800/50 transition-colors shadow-sm"
+                  title="Sair da conta"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="text-[11px]">Sair</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Centered Carteirinha with Touch Swipe Support */}
@@ -378,7 +401,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
           </div>
 
           {/* Bottom Bar: Touch swipe guidance and side toggle */}
-          <div className="w-full max-w-sm flex flex-col items-center gap-2.5 py-2 border-t border-slate-800">
+          <div className="w-full max-w-sm flex flex-col items-center gap-2 py-2 border-t border-slate-800">
             <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-300">
               <button
                 type="button"
@@ -394,6 +417,36 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
                 className={`px-3 py-1 rounded-lg text-xs transition-colors ${isFlipped ? 'bg-blue-600 text-white font-extrabold shadow' : 'text-slate-400 hover:text-white'}`}
               >
                 2. Verso (QR Code)
+              </button>
+            </div>
+
+            {/* Quick action tools right in fullscreen */}
+            <div className="grid grid-cols-3 gap-2 w-full pt-0.5">
+              <button
+                type="button"
+                onClick={() => setIsFlipped(!isFlipped)}
+                className="flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs py-2 px-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
+              >
+                <RotateCw className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Girar</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyCode}
+                className="flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs py-2 px-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-400" />}
+                <span>{copied ? 'Copiado!' : 'Código'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handlePrint}
+                className="flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs py-2 px-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
+              >
+                <Printer className="w-3.5 h-3.5 text-amber-400" />
+                <span>Imprimir</span>
               </button>
             </div>
 

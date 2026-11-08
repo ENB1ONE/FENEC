@@ -4,6 +4,7 @@ import { StudentPortal } from './components/StudentPortal';
 import { ValidatorView } from './components/ValidatorView';
 import { AdminPanel } from './components/AdminPanel';
 import { AppInstallPrompt } from './components/AppInstallPrompt';
+import { AppUpdateManager } from './components/AppUpdateManager';
 
 export function App() {
   const [showInstallGuide, setShowInstallGuide] = useState(false);
@@ -91,6 +92,9 @@ export function App() {
 
       {/* Android & iOS App Install Banner & Modal Guide */}
       <AppInstallPrompt />
+
+      {/* Forced PWA & Browser Auto-Update Manager */}
+      <AppUpdateManager />
 
       {/* Footer */}
       <footer className="w-full border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-400 no-print">
