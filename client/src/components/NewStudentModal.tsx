@@ -184,7 +184,7 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Erro ao processar solicitação.');
+        throw new Error(data.detail || data.error || 'Erro ao processar solicitação.');
       }
 
       stopCamera();

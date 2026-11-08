@@ -112,7 +112,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onOpenValidator }) => {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Falha no login.');
+        throw new Error(data.detail || data.error || 'Falha no login.');
       }
 
       setToken(data.token);

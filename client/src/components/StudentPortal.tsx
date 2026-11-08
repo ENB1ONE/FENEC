@@ -59,7 +59,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Falha ao autenticar.');
+        throw new Error(data.detail || data.error || 'Falha ao autenticar.');
       }
 
       setStudent(data.student);
