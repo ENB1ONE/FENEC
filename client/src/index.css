@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Custom Hologram and Security Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.08) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 4s infinite linear;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.98); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2.5s infinite ease-in-out;
+}
+
+/* Print styling for Carteirinha */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    margin: 0 auto !important;
+    page-break-inside: avoid;
+  }
+}
