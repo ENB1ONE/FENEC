@@ -3,8 +3,10 @@ import { Navbar } from './components/Navbar';
 import { StudentPortal } from './components/StudentPortal';
 import { ValidatorView } from './components/ValidatorView';
 import { AdminPanel } from './components/AdminPanel';
+import { AppInstallPrompt } from './components/AppInstallPrompt';
 
 export function App() {
+  const [showInstallGuide, setShowInstallGuide] = useState(false);
   const getInitialCode = (): string => {
     // 1. Check window.location.search
     const searchParams = new URLSearchParams(window.location.search);
@@ -65,6 +67,11 @@ export function App() {
       <Navbar
         currentTab={currentTab}
         onChangeTab={setCurrentTab}
+        onOpenInstallModal={() => {
+          // Clear dismissed flag so banner/modal opens
+          localStorage.removeItem('fenec_install_dismissed');
+          window.location.reload();
+        }}
       />
 
       {/* Main Content Area */}
@@ -82,12 +89,15 @@ export function App() {
         )}
       </main>
 
+      {/* Android & iOS App Install Banner & Modal Guide */}
+      <AppInstallPrompt />
+
       {/* Footer */}
       <footer className="w-full border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-400 no-print">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs">
-              F
+            <div className="w-7 h-7 flex-shrink-0">
+              <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
             </div>
             <span className="font-bold text-slate-300">
               FENEC — Faculdade e Escola de Negócios e Educação Continuada

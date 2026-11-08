@@ -114,8 +114,8 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
     <div className="w-full max-w-md mx-auto py-2">
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 shadow-xl shadow-amber-500/20 mb-3 border border-amber-300/40">
-          <GraduationCap className="w-8 h-8" />
+        <div className="inline-flex items-center justify-center w-16 h-16 drop-shadow-[0_4px_16px_rgba(234,179,8,0.35)] mb-3">
+          <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
         </div>
         <h2 className="text-2xl font-black tracking-tight text-white font-sans">
           Portal do Estudante FENEC

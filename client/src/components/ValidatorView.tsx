@@ -103,8 +103,11 @@ export const ValidatorView: React.FC<ValidatorViewProps> = ({ initialCodigo = ''
     <div className="w-full max-w-2xl mx-auto py-2">
       {/* Header Banner */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white shadow-xl shadow-blue-500/20 mb-3 border border-blue-400/30">
-          <ShieldCheck className="w-8 h-8" />
+        <div className="relative inline-flex items-center justify-center w-16 h-16 drop-shadow-[0_4px_16px_rgba(56,189,248,0.3)] mb-3">
+          <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
+          <div className="absolute -bottom-1 -right-1 bg-blue-600 text-white p-1 rounded-full border border-slate-900 shadow">
+            <ShieldCheck className="w-3.5 h-3.5" />
+          </div>
         </div>
         <h2 className="text-2xl font-black tracking-tight text-white font-sans">
           Validador Oficial de Carteirinhas FENEC

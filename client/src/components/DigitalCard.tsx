@@ -127,15 +127,15 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
       {/* Header: Institution Branding */}
       <div className="relative z-20 flex items-center justify-between border-b border-amber-400/30 pb-2.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-md flex-shrink-0">
-            <Award className="w-5 h-5 stroke-[2.5]" />
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 drop-shadow-[0_2px_8px_rgba(234,179,8,0.35)]">
+            <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-lg font-black tracking-wider text-amber-300 font-sans leading-none">
               FENEC
             </h2>
             <p className="text-[9px] text-slate-300 font-medium tracking-tight mt-0.5 uppercase">
-              Educação e Inovação
+              Faculdade & Educação Continuada
             </p>
           </div>
         </div>
@@ -340,6 +340,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
+              <img src="./logo-fenec.svg" alt="FENEC" className="w-5 h-5 object-contain" />
               <span className="text-xs font-bold text-white tracking-wide">
                 FENEC Digital
               </span>
@@ -551,8 +552,8 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
           {/* Official Document Header */}
           <div className="border-b-2 border-slate-900 pb-2 mb-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 bg-amber-400 text-slate-950 font-black text-xl rounded-xl flex items-center justify-center border-2 border-slate-900 shadow-sm flex-shrink-0">
-                F
+              <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                <img src="./logo-fenec.svg" alt="FENEC Crest" className="w-full h-full object-contain" />
               </div>
               <div>
                 <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest block">
@@ -590,8 +591,8 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
                 {/* Header Frente */}
                 <div className="border-b border-amber-400/40 pb-1.5 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs flex-shrink-0">
-                      F
+                    <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
+                      <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
                     </div>
                     <div>
                       <h3 className="text-[11px] font-black tracking-wider text-amber-300 leading-none">
