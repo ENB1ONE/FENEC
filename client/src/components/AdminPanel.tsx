@@ -263,8 +263,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onOpenValidator }) => {
       {/* Top Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 shadow-lg backdrop-blur">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
-            <Building2 className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 drop-shadow-[0_4px_12px_rgba(234,179,8,0.3)]">
+            <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-xl font-black text-white font-sans flex items-center gap-2">

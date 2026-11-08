@@ -1,5 +1,5 @@
 // FENEC Digital - Service Worker com Atualização Forçada e Cache-Busting
-const BUILD_TIME = '1794151700000';
+const BUILD_TIME = '1794161100000';
 const CACHE_NAME = 'fenec-cache-v-' + BUILD_TIME;
 
 const STATIC_ASSETS = [

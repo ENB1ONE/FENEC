@@ -113,7 +113,7 @@ export const AppInstallPrompt: React.FC = () => {
         >
           <div className="flex items-start justify-between gap-2.5">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl overflow-hidden bg-slate-950 border border-amber-400/50 shadow-md flex-shrink-0 p-1 flex items-center justify-center">
+              <div className="w-11 h-11 flex-shrink-0 drop-shadow-[0_4px_12px_rgba(234,179,8,0.35)] flex items-center justify-center">
                 <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
               </div>
               <div>
@@ -182,7 +182,7 @@ export const AppInstallPrompt: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/60 p-1 flex items-center justify-center">
+                <div className="w-10 h-10 flex-shrink-0 drop-shadow-[0_4px_12px_rgba(234,179,8,0.35)] flex items-center justify-center">
                   <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
                 </div>
                 <div>
@@ -279,7 +279,7 @@ export const AppInstallPrompt: React.FC = () => {
           >
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/60 p-1 flex items-center justify-center">
+                <div className="w-10 h-10 flex-shrink-0 drop-shadow-[0_4px_12px_rgba(234,179,8,0.35)] flex items-center justify-center">
                   <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
                 </div>
                 <div>

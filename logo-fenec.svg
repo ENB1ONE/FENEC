@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <!-- Rich Gold Metallic Gradient -->
+    <!-- Rich Gold Metallic Gradients -->
     <linearGradient id="sqGold" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FEF08A" />
       <stop offset="25%" stop-color="#FACC15" />
@@ -9,24 +9,17 @@
       <stop offset="100%" stop-color="#854D0E" />
     </linearGradient>
 
-    <!-- Deep Academic Navy Gradient -->
+    <!-- Deep Academic Navy Background Gradient -->
     <linearGradient id="sqNavy" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#1E293B" />
       <stop offset="40%" stop-color="#0F172A" />
       <stop offset="100%" stop-color="#020617" />
     </linearGradient>
 
-    <!-- Crystal Sheen Overlay -->
-    <linearGradient id="sqSheen" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.32" />
-      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.08" />
-      <stop offset="75%" stop-color="#FFFFFF" stop-opacity="0" />
-    </linearGradient>
-
     <!-- Drop Shadow / Glow -->
     <filter id="sqGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.65" />
-      <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#EAB308" flood-opacity="0.4" />
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.6" />
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#EAB308" flood-opacity="0.35" />
     </filter>
   </defs>
 
@@ -41,59 +34,24 @@
   <rect x="56" y="56" width="400" height="400" rx="74" 
         fill="none" 
         stroke="url(#sqGold)" 
-        stroke-width="3" 
-        stroke-opacity="0.6" />
+        stroke-width="3.5" 
+        stroke-opacity="0.85" />
 
-  <!-- Diagonal Glass Sheen across Top-Left Corner -->
-  <path d="M56 180 L180 56 L340 56 L56 340 Z" fill="url(#sqSheen)" />
-
-  <!-- Star of Excellence at Top Apex -->
+  <!-- 4-Point Star of Excellence at Top Apex -->
   <g transform="translate(256, 110)">
-    <path d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="url(#sqGold)" />
-    <circle cx="0" cy="0" r="4" fill="#FFFFFF" opacity="0.9" />
+    <path d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#FEF08A" />
+    <circle cx="0" cy="0" r="3.5" fill="#FFFFFF" opacity="0.95" />
   </g>
 
-  <!-- Institutional Monogram "F" in Gold with 3D Relief -->
-  <g transform="translate(182, 142)">
+  <!-- Institutional Monogram "F" in Gold -->
+  <g>
     <!-- Vertical Pillar -->
-    <path d="M14 12 C14 5 19 0 26 0 L68 0 C75 0 80 5 80 12 L80 236 C80 243 75 248 68 248 L26 248 C19 248 14 243 14 236 Z" 
-          fill="url(#sqGold)" />
+    <rect x="196" y="154" width="52" height="236" rx="8" fill="url(#sqGold)" />
 
-    <!-- Top Crossbar -->
-    <path d="M80 0 L154 0 C162 0 168 6 166 14 L160 48 C158 54 152 60 144 60 L80 60 Z" 
-          fill="url(#sqGold)" />
+    <!-- Top Arm -->
+    <rect x="248" y="154" width="88" height="60" rx="8" fill="#FACC15" />
 
-    <!-- Middle Crossbar -->
-    <path d="M80 102 L132 102 C140 102 146 108 144 116 L138 142 C136 148 130 152 122 152 L80 152 Z" 
-          fill="url(#sqGold)" />
-
-    <!-- Chiseled 3D Highlights -->
-    <path d="M22 6 L64 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-opacity="0.5" />
-    <path d="M86 6 L148 6" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-opacity="0.5" />
-    <path d="M86 108 L128 108" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-opacity="0.5" />
-    <path d="M22 14 L22 232" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-opacity="0.25" />
-  </g>
-
-  <!-- Academic Laurels (Folhas de Louro Clássicas na base) -->
-  <g fill="url(#sqGold)" opacity="0.95">
-    <!-- Left Branch -->
-    <g>
-      <path d="M120 340 C136 380 174 414 220 428" fill="none" stroke="url(#sqGold)" stroke-width="4" stroke-linecap="round" />
-      <path d="M112 326 C116 318 126 318 132 326 C134 336 124 344 112 326 Z" />
-      <path d="M126 352 C134 346 142 350 144 360 C144 370 134 374 126 352 Z" />
-      <path d="M148 376 C158 370 166 376 168 386 C168 396 156 400 148 376 Z" />
-      <path d="M176 398 C186 394 194 400 196 410 C194 420 182 422 176 398 Z" />
-      <path d="M206 414 C216 412 224 418 224 426 C222 434 212 436 206 414 Z" />
-    </g>
-
-    <!-- Right Branch -->
-    <g>
-      <path d="M392 340 C376 380 338 414 292 428" fill="none" stroke="url(#sqGold)" stroke-width="4" stroke-linecap="round" />
-      <path d="M400 326 C396 318 386 318 380 326 C378 336 388 344 400 326 Z" />
-      <path d="M386 352 C378 346 370 350 368 360 C368 370 378 374 386 352 Z" />
-      <path d="M364 376 C354 370 346 376 344 386 C344 396 356 400 364 376 Z" />
-      <path d="M336 398 C326 394 318 400 316 410 C318 420 330 422 336 398 Z" />
-      <path d="M306 414 C296 412 288 418 288 426 C290 434 300 436 306 414 Z" />
-    </g>
+    <!-- Mid Arm -->
+    <rect x="248" y="256" width="66" height="50" rx="8" fill="url(#sqGold)" />
   </g>
 </svg>

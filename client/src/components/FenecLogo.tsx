@@ -51,7 +51,7 @@ export const FenecLogo: React.FC<FenecLogoProps> = ({
             x="36" y="36" width="440" height="440" rx="92" 
             fill="url(#sqLogoNavy)" 
             stroke="url(#sqLogoGold)" 
-            strokeWidth="20" 
+            strokeWidth="18" 
           />
 
           {/* Inner Inset Trim */}
@@ -60,36 +60,20 @@ export const FenecLogo: React.FC<FenecLogoProps> = ({
             fill="none" 
             stroke="url(#sqLogoGold)" 
             strokeWidth="3.5" 
-            strokeOpacity="0.6" 
+            strokeOpacity="0.85" 
           />
 
-          {/* Diagonal Glass Sheen */}
-          <path d="M56 180 L180 56 L340 56 L56 340 Z" fill="url(#sqLogoSheen)" />
-
-          {/* Apex Star */}
+          {/* 4-Point Star of Excellence at Top Apex */}
           <g transform="translate(256, 110)">
-            <path d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="url(#sqLogoGold)" />
-            <circle cx="0" cy="0" r="4" fill="#FFFFFF" opacity="0.9" />
+            <path d="M0 -24 L6 -6 L24 0 L6 6 L0 24 L-6 6 L-24 0 L-6 -6 Z" fill="#FEF08A" />
+            <circle cx="0" cy="0" r="3.5" fill="#FFFFFF" opacity="0.95" />
           </g>
 
-          {/* Stylized Monogram F */}
-          <g transform="translate(182, 142)">
-            {/* Pillar */}
-            <path d="M14 12 C14 5 19 0 26 0 L68 0 C75 0 80 5 80 12 L80 236 C80 243 75 248 68 248 L26 248 C19 248 14 243 14 236 Z" fill="url(#sqLogoGold)" />
-            {/* Top Bar */}
-            <path d="M80 0 L154 0 C162 0 168 6 166 14 L160 48 C158 54 152 60 144 60 L80 60 Z" fill="url(#sqLogoGold)" />
-            {/* Mid Bar */}
-            <path d="M80 102 L132 102 C140 102 146 108 144 116 L138 142 C136 148 130 152 122 152 L80 152 Z" fill="url(#sqLogoGold)" />
-            {/* Chisel Highlights */}
-            <path d="M22 6 L64 6" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.5" />
-            <path d="M86 6 L148 6" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.5" />
-            <path d="M86 108 L128 108" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.5" />
-          </g>
-
-          {/* Laurels */}
-          <g stroke="url(#sqLogoGold)" strokeWidth="4" strokeLinecap="round">
-            <path d="M120 340 C136 380 174 414 220 428" />
-            <path d="M392 340 C376 380 338 414 292 428" />
+          {/* Monogram F (Pillar & Arms) */}
+          <g>
+            <rect x="196" y="154" width="52" height="236" rx="8" fill="url(#sqLogoGold)" />
+            <rect x="248" y="154" width="88" height="60" rx="8" fill="#FACC15" />
+            <rect x="248" y="256" width="66" height="50" rx="8" fill="url(#sqLogoGold)" />
           </g>
         </svg>
       </div>

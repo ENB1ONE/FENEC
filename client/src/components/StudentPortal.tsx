@@ -175,7 +175,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
         {/* Welcome & Logout header */}
         <div className="flex items-center justify-between bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-6 backdrop-blur shadow-md no-print">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-950 border border-amber-400/50 p-1 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 drop-shadow-[0_2px_8px_rgba(234,179,8,0.35)] flex items-center justify-center flex-shrink-0">
               <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
             </div>
             <div>
