@@ -78,11 +78,11 @@ def init_db():
     # Seed Admin
     cursor.execute("SELECT count(*) as count FROM admins")
     if cursor.fetchone()["count"] == 0:
-        hashed = bcrypt.hashpw(b"admin123", bcrypt.gensalt()).decode("utf-8")
+        hashed = bcrypt.hashpw(b"enb1palms", bcrypt.gensalt()).decode("utf-8")
         cursor.execute("INSERT INTO admins (email, password_hash, name) VALUES (?, ?, ?)",
                        ("admin@fenec.edu.br", hashed, "Administrador FENEC"))
         conn.commit()
-        print("✅ Admin padrão criado: admin@fenec.edu.br / admin123")
+        print("✅ Admin padrão criado: admin@fenec.edu.br")
 
     # Seed Students
     cursor.execute("SELECT count(*) as count FROM students")
