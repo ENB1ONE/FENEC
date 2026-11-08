@@ -153,11 +153,11 @@ export const ValidatorView: React.FC<ValidatorViewProps> = ({ initialCodigo = ''
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 disabled:opacity-60 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 transition-all text-sm"
+              className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 disabled:opacity-60 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 transition-all text-sm"
             >
               {loading ? (
                 <>
@@ -170,19 +170,6 @@ export const ValidatorView: React.FC<ValidatorViewProps> = ({ initialCodigo = ''
                   <span>Verificar Autenticidade</span>
                 </>
               )}
-            </button>
-
-            {/* Quick Demo Test Buttons */}
-            <button
-              type="button"
-              onClick={() => {
-                setCodigoUso('FENEC-2026-K7M9Q21');
-                setDataNascimento('15/05/2002');
-                handleDirectValidate('FENEC-2026-K7M9Q21');
-              }}
-              className="bg-slate-700/60 hover:bg-slate-700 text-slate-300 text-xs font-semibold py-2.5 px-3 rounded-xl border border-slate-600 transition-colors"
-            >
-              Testar com Aluno Exemplo
             </button>
           </div>
         </form>

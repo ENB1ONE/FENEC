@@ -1,18 +1,14 @@
 import React from 'react';
-import { Award, GraduationCap, ShieldCheck, Lock, Sparkles, HelpCircle } from 'lucide-react';
+import { Award, GraduationCap, ShieldCheck, Lock } from 'lucide-react';
 
 interface NavbarProps {
   currentTab: 'student' | 'validator' | 'admin';
   onChangeTab: (tab: 'student' | 'validator' | 'admin') => void;
-  showHelp: boolean;
-  onToggleHelp: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
-  onChangeTab,
-  showHelp,
-  onToggleHelp
+  onChangeTab
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full bg-slate-900/95 border-b border-slate-800 backdrop-blur shadow-md">
@@ -44,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="flex items-center gap-1 bg-slate-800/90 p-1 rounded-xl border border-slate-700/80">
           <button
             onClick={() => onChangeTab('student')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
               currentTab === 'student'
                 ? 'bg-amber-500 text-slate-950 shadow-md'
                 : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
@@ -56,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onChangeTab('validator')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
               currentTab === 'validator'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
@@ -68,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onChangeTab('admin')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
               currentTab === 'admin'
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
@@ -78,20 +74,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="hidden sm:inline">Secretaria</span>
           </button>
         </nav>
-
-        {/* Help / Demo Guide Trigger */}
-        <button
-          onClick={onToggleHelp}
-          className={`p-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
-            showHelp
-              ? 'bg-amber-500/20 text-amber-300 border-amber-400/40'
-              : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
-          }`}
-          title="Ver Guia de Uso e Credenciais de Teste"
-        >
-          <HelpCircle className="w-4 h-4 text-amber-400" />
-          <span className="hidden md:inline">Guia de Acesso</span>
-        </button>
       </div>
     </header>
   );

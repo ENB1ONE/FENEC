@@ -80,25 +80,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
     localStorage.removeItem('fenec_student_token');
   };
 
-  // Quick Demo fill
-  const handleQuickLogin = (demoCpf: string, demoBirthDate: string) => {
-    setCpf(maskCPF(demoCpf));
-    setBirthDate(demoBirthDate);
-    fetch(apiUrl('/api/auth/student-login'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cpf: demoCpf, birthDate: demoBirthDate })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.student) {
-          setStudent(data.student);
-          localStorage.setItem('fenec_student_data', JSON.stringify(data.student));
-        }
-      })
-      .catch(console.error);
-  };
-
   if (student) {
     return (
       <div className="w-full max-w-2xl mx-auto py-2">
@@ -208,46 +189,6 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
             )}
           </button>
         </form>
-
-        {/* Quick Demo Student Access */}
-        <div className="mt-6 pt-5 border-t border-slate-700/60">
-          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Acesso Rápido de Teste (Demonstração)
-          </p>
-          <div className="grid grid-cols-1 gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('123.456.789-00', '15/05/2002')}
-              className="w-full bg-slate-900/90 hover:bg-slate-700/90 text-left p-2.5 rounded-xl border border-slate-700 flex items-center justify-between group transition-colors"
-            >
-              <div>
-                <p className="text-xs font-bold text-amber-300 group-hover:text-amber-200">
-                  Ana Clara de Oliveira Mendes
-                </p>
-                <p className="text-[11px] text-slate-400">Engenharia de Software (Graduação)</p>
-              </div>
-              <span className="text-[10px] bg-blue-500/20 text-cyan-300 px-2 py-0.5 rounded border border-blue-500/30">
-                Entrar →
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('987.654.321-99', '28/11/1999')}
-              className="w-full bg-slate-900/90 hover:bg-slate-700/90 text-left p-2.5 rounded-xl border border-slate-700 flex items-center justify-between group transition-colors"
-            >
-              <div>
-                <p className="text-xs font-bold text-amber-300 group-hover:text-amber-200">
-                  Lucas Ferreira da Silva
-                </p>
-                <p className="text-[11px] text-slate-400">Administração e Inovação (Pós-Graduação)</p>
-              </div>
-              <span className="text-[10px] bg-blue-500/20 text-cyan-300 px-2 py-0.5 rounded border border-blue-500/30">
-                Entrar →
-              </span>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -3,33 +3,54 @@ import { Navbar } from './components/Navbar';
 import { StudentPortal } from './components/StudentPortal';
 import { ValidatorView } from './components/ValidatorView';
 import { AdminPanel } from './components/AdminPanel';
-import { 
-  Award, 
-  ShieldCheck, 
-  GraduationCap, 
-  Lock, 
-  HelpCircle, 
-  X, 
-  Sparkles, 
-  CheckCircle2,
-  ExternalLink
-} from 'lucide-react';
 
 export function App() {
+  const getInitialCode = (): string => {
+    // 1. Check window.location.search
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('codigo')) {
+      return searchParams.get('codigo')!;
+    }
+    
+    // 2. Check window.location.hash (e.g. #/validar?codigo=... or #codigo=...)
+    if (window.location.hash) {
+      const hashStr = window.location.hash.includes('?')
+        ? window.location.hash.split('?')[1]
+        : window.location.hash.replace('#', '');
+      const hashParams = new URLSearchParams(hashStr);
+      if (hashParams.get('codigo')) {
+        return hashParams.get('codigo')!;
+      }
+    }
+    return '';
+  };
+
+  const initialCode = getInitialCode();
+
   const [currentTab, setCurrentTab] = useState<'student' | 'validator' | 'admin'>(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('codigo') || window.location.pathname.includes('validar')) {
+    if (initialCode || window.location.pathname.includes('validar')) {
       return 'validator';
     }
     return 'student';
   });
 
-  const [initialValidatorCode, setInitialValidatorCode] = useState<string>(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('codigo') || '';
-  });
+  const [initialValidatorCode, setInitialValidatorCode] = useState<string>(initialCode);
 
-  const [showHelp, setShowHelp] = useState(true);
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const code = getInitialCode();
+      if (code) {
+        setInitialValidatorCode(code);
+        setCurrentTab('validator');
+      }
+    };
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
+  }, []);
 
   // When validator is requested with a specific code
   const handleOpenValidator = (codigoUso: string) => {
@@ -44,47 +65,7 @@ export function App() {
       <Navbar
         currentTab={currentTab}
         onChangeTab={setCurrentTab}
-        showHelp={showHelp}
-        onToggleHelp={() => setShowHelp(!showHelp)}
       />
-
-      {/* Collapsible Quick Guide & Demo Credentials Banner */}
-      {showHelp && (
-        <div className="bg-gradient-to-r from-blue-950/90 via-indigo-950/90 to-blue-950/90 border-b border-blue-800/40 p-4 relative backdrop-blur animate-in fade-in">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded text-[10px] uppercase">
-                  FENEC Oficial
-                </span>
-                <h4 className="font-bold text-white text-sm">
-                  Sistema de Carteirinhas Estudantis Digitais e Validador
-                </h4>
-              </div>
-              <p className="text-slate-300">
-                Padrão inspirado no Documento Nacional do Estudante (DNE / Lei 12.933/2013). Use as credenciais abaixo para testar cada perfil:
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2 text-[11px]">
-              <div className="bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700 font-mono">
-                <span className="text-amber-400 font-bold">Secretaria (Admin):</span> admin@fenec.edu.br / admin123
-              </div>
-              <div className="bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700 font-mono">
-                <span className="text-cyan-400 font-bold">Aluno Exemplo:</span> CPF 123.456.789-00 / Nasc 15/05/2002
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowHelp(false)}
-              className="absolute top-2 right-2 md:static text-slate-400 hover:text-white p-1 rounded-lg"
-              title="Fechar guia"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8">

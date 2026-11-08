@@ -205,7 +205,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
               </div>
             </div>
 
-            {/* Footer: Código de Uso & Validade */}
+            {/* Footer: Código de Uso, QR Preview & Validade */}
             <div className="relative z-20 pt-2 border-t border-slate-700/60 mt-1 flex items-end justify-between">
               <div>
                 <span className="text-[9px] font-bold text-amber-400 uppercase tracking-widest block">
@@ -216,11 +216,21 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
                 </span>
               </div>
 
-              <div className="text-right">
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block font-semibold">Validade</span>
-                <span className="inline-block bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-extrabold text-xs px-2.5 py-0.5 rounded-md shadow font-mono">
-                  {student.valid_until}
-                </span>
+              <div className="flex items-center gap-2">
+                {qrCodeUrl && (
+                  <div 
+                    className="w-10 h-10 bg-white p-0.5 rounded-lg border border-amber-400/80 shadow cursor-pointer hover:scale-105 transition-transform flex-shrink-0"
+                    title="Toque para girar e ver QR Code completo"
+                  >
+                    <img src={qrCodeUrl} alt="QR Code" className="w-full h-full object-contain" />
+                  </div>
+                )}
+                <div className="text-right">
+                  <span className="text-[9px] text-slate-400 uppercase tracking-wider block font-semibold">Validade</span>
+                  <span className="inline-block bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-extrabold text-xs px-2.5 py-0.5 rounded-md shadow font-mono">
+                    {student.valid_until}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -228,7 +238,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
             <div className="relative z-20 text-center pt-1 no-print">
               <span className="text-[10px] text-slate-400 flex items-center justify-center gap-1">
                 <RotateCw className="w-3 h-3 text-cyan-400 animate-spin" style={{ animationDuration: '8s' }} />
-                Toque no cartão para ver o QR Code
+                Toque no cartão para girar e escanear o QR Code
               </span>
             </div>
           </div>
@@ -247,13 +257,20 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
                 <p className="text-[10px] text-slate-400">Padrão Nacional de Identificação</p>
               </div>
               <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> Certificado
+                <ShieldCheck className="w-3 h-3" /> Certificado ICP
               </div>
             </div>
 
             {/* Center: QR Code & Verification Info */}
             <div className="relative z-20 flex flex-col items-center justify-center my-auto py-2">
-              <div className="bg-white p-2.5 rounded-2xl shadow-xl border-4 border-amber-400/50 flex flex-col items-center">
+              <a
+                href={`https://enb1one.github.io/FENEC/?codigo=${encodeURIComponent(student.codigo_uso)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="group relative bg-white p-3 rounded-2xl shadow-2xl border-4 border-amber-400/70 hover:border-cyan-400 transition-all flex flex-col items-center"
+                title="Clique ou aponte a câmera para autenticar"
+              >
                 {qrCodeUrl ? (
                   <img src={qrCodeUrl} alt="QR Code de Validação" className="w-40 h-40 object-contain" />
                 ) : (
@@ -261,7 +278,10 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
                     <QrIcon className="w-12 h-12 animate-pulse" />
                   </div>
                 )}
-              </div>
+                <span className="absolute bottom-1 bg-slate-900/90 text-cyan-300 text-[9px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                  Abrir Validador ↗
+                </span>
+              </a>
               <p className="text-[11px] font-semibold text-cyan-300 mt-2 flex items-center gap-1">
                 <QrIcon className="w-3.5 h-3.5" /> Aponte a câmera para validar
               </p>

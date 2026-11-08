@@ -1,6 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Student } from '../types';
-import { X, Upload, User, CreditCard, Calendar, BookOpen, GraduationCap, FileText, CheckCircle2 } from 'lucide-react';
+import { 
+  X, 
+  Upload, 
+  User, 
+  CreditCard, 
+  Calendar, 
+  BookOpen, 
+  GraduationCap, 
+  FileText, 
+  CheckCircle2,
+  Camera,
+  RotateCw,
+  Trash2,
+  AlertCircle
+} from 'lucide-react';
 import { maskCPF, maskDate } from '../utils';
 import { apiUrl } from '../api';
 
@@ -32,6 +46,86 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
   const [photoPreview, setPhotoPreview] = useState<string>(studentToEdit?.photo_url || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Camera state
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
+  };
+
+  const startCamera = async (mode: 'user' | 'environment' = 'user') => {
+    stopCamera();
+    setCameraError(null);
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Câmera não é suportada ou permitida neste navegador.');
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { 
+          facingMode: mode,
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+        },
+        audio: false
+      });
+      streamRef.current = stream;
+      setFacingMode(mode);
+      setIsCameraActive(true);
+    } catch (err: any) {
+      console.error('Camera error:', err);
+      setCameraError('Não foi possível acessar a câmera. Verifique as permissões do dispositivo.');
+      setIsCameraActive(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isCameraActive && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play().catch(e => console.error('Video play error:', e));
+    }
+  }, [isCameraActive]);
+
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
+
+  const handleCapture = () => {
+    if (!videoRef.current) return;
+    const video = videoRef.current;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Draw current frame
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const file = new File([blob], `estudante-${Date.now()}.jpg`, { type: 'image/jpeg' });
+        setPhotoFile(file);
+        setPhotoPreview(canvas.toDataURL('image/jpeg', 0.9));
+        stopCamera();
+      }
+    }, 'image/jpeg', 0.9);
+  };
+
+  const handleClose = () => {
+    stopCamera();
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -93,6 +187,7 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
         throw new Error(data.error || 'Erro ao processar solicitação.');
       }
 
+      stopCamera();
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -116,7 +211,7 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
             </h3>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -131,41 +226,117 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
             </div>
           )}
 
-          {/* Photo Upload & Preview Section */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 bg-slate-800/60 p-4 rounded-xl border border-slate-700/60">
-            <div className="w-20 h-24 rounded-lg overflow-hidden border-2 border-amber-400/80 bg-slate-950 flex-shrink-0 flex items-center justify-center shadow">
-              {photoPreview ? (
-                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-8 h-8 text-slate-500" />
-              )}
+          {/* Photo Upload & Camera Capture Section */}
+          <div className="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 space-y-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-300">
+                Foto do Estudante (Estilo 3x4 / Documento)
+              </label>
+              <p className="text-[11px] text-slate-400">
+                Tire uma foto na hora com a câmera do celular/computador ou selecione um arquivo.
+              </p>
             </div>
 
-            <div className="flex-1 w-full text-center sm:text-left">
-              <label className="block text-xs font-bold text-slate-300 mb-1">
-                Foto do Estudante (Estilo 3x4 / Selfie Nítida)
-              </label>
-              <p className="text-[11px] text-slate-400 mb-2">
-                Fundo neutro, rosto de frente descoberto. JPG, PNG até 5MB.
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                <label className="cursor-pointer bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold py-1.5 px-3 rounded-lg border border-slate-600 inline-flex items-center gap-1.5 transition-colors">
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>Selecionar Foto</span>
-                  <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                </label>
+            {cameraError && (
+              <div className="p-2.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{cameraError}</span>
+              </div>
+            )}
 
-                {photoPreview && (
+            {isCameraActive ? (
+              <div className="relative rounded-xl overflow-hidden bg-black border-2 border-cyan-500/80 p-3 flex flex-col items-center">
+                <div className="relative w-full max-w-xs aspect-[3/4] bg-slate-950 rounded-lg overflow-hidden flex items-center justify-center">
+                  <video 
+                    ref={videoRef} 
+                    autoPlay 
+                    playsInline 
+                    muted 
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Guide overlay for face */}
+                  <div className="absolute inset-4 border-2 border-dashed border-cyan-400/60 rounded-[50%] pointer-events-none flex items-center justify-center">
+                    <span className="text-[10px] text-cyan-200/90 bg-slate-900/80 px-2 py-0.5 rounded-full font-semibold">
+                      Posicione o rosto
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 mt-3 w-full justify-center">
                   <button
                     type="button"
-                    onClick={() => { setPhotoFile(null); setPhotoPreview(''); }}
-                    className="text-xs text-rose-400 hover:text-rose-300 py-1.5 px-2"
+                    onClick={handleCapture}
+                    className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-2 px-4 rounded-xl text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/30"
                   >
-                    Remover
+                    <Camera className="w-4 h-4" />
+                    <span>Capturar Foto</span>
                   </button>
-                )}
+
+                  <button
+                    type="button"
+                    onClick={() => startCamera(facingMode === 'user' ? 'environment' : 'user')}
+                    className="bg-slate-700 hover:bg-slate-600 text-slate-200 py-2 px-3 rounded-xl text-xs font-semibold flex items-center gap-1 border border-slate-600"
+                    title="Alternar Câmera"
+                  >
+                    <RotateCw className="w-3.5 h-3.5" />
+                    <span>Inverter</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={stopCamera}
+                    className="bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 px-3 rounded-xl text-xs font-semibold border border-slate-700"
+                  >
+                    Cancelar
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="w-20 h-24 rounded-lg overflow-hidden border-2 border-amber-400/80 bg-slate-950 flex-shrink-0 flex items-center justify-center shadow">
+                  {photoPreview ? (
+                    <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-8 h-8 text-slate-500" />
+                  )}
+                </div>
+
+                <div className="flex-1 w-full text-center sm:text-left">
+                  <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                    <button
+                      type="button"
+                      onClick={() => startCamera('user')}
+                      className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-bold py-2 px-3.5 rounded-lg shadow-md flex items-center gap-1.5 transition-all"
+                    >
+                      <Camera className="w-3.5 h-3.5" />
+                      <span>Tirar Foto com Câmera</span>
+                    </button>
+
+                    <label className="cursor-pointer bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-semibold py-2 px-3.5 rounded-lg border border-slate-600 inline-flex items-center gap-1.5 transition-colors">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Enviar Arquivo</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handlePhotoChange} 
+                        className="hidden" 
+                      />
+                    </label>
+
+                    {photoPreview && (
+                      <button
+                        type="button"
+                        onClick={() => { setPhotoFile(null); setPhotoPreview(''); }}
+                        className="text-xs text-rose-400 hover:text-rose-300 py-2 px-2 flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Remover</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Student Fields */}

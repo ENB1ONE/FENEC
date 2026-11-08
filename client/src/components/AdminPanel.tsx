@@ -250,21 +250,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onOpenValidator }) => {
               )}
             </button>
           </form>
-
-          {/* Quick Demo Admin Button */}
-          <div className="mt-5 pt-4 border-t border-slate-700/60">
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('admin@fenec.edu.br');
-                setPassword('admin123');
-              }}
-              className="w-full bg-slate-900/90 hover:bg-slate-700 text-cyan-300 text-xs font-semibold py-2 px-3 rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Preencher Credenciais Padrão (admin@fenec.edu.br)
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -283,7 +268,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onOpenValidator }) => {
               Gestão de Carteirinhas — FENEC
             </h2>
             <p className="text-xs text-slate-400">
-              Conectado como <strong className="text-slate-200">{adminUser?.name || 'Administrador'}</strong> ({adminUser?.email})
+              Controle, Emissão e Validação de Documentos Estudantis
             </p>
           </div>
         </div>
