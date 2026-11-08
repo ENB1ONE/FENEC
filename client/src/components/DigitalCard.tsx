@@ -184,6 +184,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
         <div className="relative flex-shrink-0">
           <div className="w-24 h-32 rounded-xl overflow-hidden border-2 border-amber-400/80 shadow-lg bg-slate-800">
             <img 
+              key={photoUrl}
               src={photoUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.name)}`} 
               alt={student.name}
               className="w-full h-full object-cover"

@@ -5,6 +5,8 @@ import string
 import datetime
 import io
 import base64
+import uuid
+from urllib.parse import quote
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form, Request, status
@@ -411,6 +413,61 @@ def get_student(student_id: int, admin=Depends(require_admin)):
         raise HTTPException(status_code=404, detail="Estudante não encontrado.")
     return {"student": dict(row)}
 
+async def process_incoming_photo(
+    photo: Optional[UploadFile],
+    photo_url: Optional[str],
+    default_name: str,
+    fallback_photo: Optional[str] = None
+) -> str:
+    # 1. Binary file uploaded
+    if photo:
+        try:
+            contents = await photo.read()
+            if contents and len(contents) > 0:
+                raw_ext = "jpg"
+                orig_name = photo.filename or "upload.jpg"
+                if "." in orig_name:
+                    raw_ext = orig_name.rsplit(".", 1)[1].lower()
+                if raw_ext not in ["jpg", "jpeg", "png", "webp"]:
+                    raw_ext = "jpg"
+                filename = f"photo-{int(datetime.datetime.now().timestamp())}-{uuid.uuid4().hex[:6]}.{raw_ext}"
+                filepath = os.path.join(UPLOADS_DIR, filename)
+                with open(filepath, "wb") as f:
+                    f.write(contents)
+                return f"https://alfa-api.servicesbr.duckdns.org/fenec-api/uploads/{filename}"
+        except Exception as e:
+            print(f"[Upload] Erro ao salvar arquivo binario: {e}")
+
+    # 2. Base64 or URL provided in photo_url
+    if photo_url is not None:
+        p_strip = photo_url.strip()
+        if p_strip.startswith("data:image/"):
+            try:
+                header, encoded = p_strip.split(",", 1)
+                ext = "jpg"
+                if "png" in header:
+                    ext = "png"
+                elif "webp" in header:
+                    ext = "webp"
+                data_bytes = base64.b64decode(encoded)
+                if len(data_bytes) > 0:
+                    filename = f"photo-{int(datetime.datetime.now().timestamp())}-{uuid.uuid4().hex[:6]}.{ext}"
+                    filepath = os.path.join(UPLOADS_DIR, filename)
+                    with open(filepath, "wb") as f:
+                        f.write(data_bytes)
+                    return f"https://alfa-api.servicesbr.duckdns.org/fenec-api/uploads/{filename}"
+            except Exception as e:
+                print(f"[Upload] Erro ao decodificar base64: {e}")
+        elif p_strip.startswith("http"):
+            return p_strip
+        elif p_strip == "":
+            return f"https://api.dicebear.com/7.x/initials/svg?seed={quote(default_name)}&backgroundColor=1e3a8a,0f172a"
+
+    if fallback_photo:
+        return fallback_photo
+
+    return f"https://api.dicebear.com/7.x/initials/svg?seed={quote(default_name)}&backgroundColor=1e3a8a,0f172a"
+
 @app.post("/api/admin/students")
 async def create_student(
     name: str = Form(...),
@@ -434,16 +491,12 @@ async def create_student(
         conn.close()
         raise HTTPException(status_code=400, detail="Já existe um estudante com esta matrícula.")
 
-    final_photo = photo_url or ""
-    if photo and photo.filename:
-        filename = f"photo-{int(datetime.datetime.now().timestamp())}-{photo.filename}"
-        filepath = os.path.join(UPLOADS_DIR, filename)
-        contents = await photo.read()
-        with open(filepath, "wb") as f:
-            f.write(contents)
-        final_photo = f"https://alfa-api.servicesbr.duckdns.org/fenec-api/uploads/{filename}"
-    elif not final_photo:
-        final_photo = f"https://api.dicebear.com/7.x/initials/svg?seed={name}&backgroundColor=1e3a8a,0f172a"
+    final_photo = await process_incoming_photo(
+        photo=photo,
+        photo_url=photo_url,
+        default_name=name.strip(),
+        fallback_photo=None
+    )
 
     codigo_uso = generate_codigo_uso()
     valid_until = calculate_default_validity()
@@ -469,6 +522,7 @@ async def create_student(
     return {"message": "Estudante e Carteirinha criados com sucesso!", "student": dict(new_student)}
 
 @app.put("/api/admin/students/{student_id}")
+@app.post("/api/admin/students/{student_id}")
 async def update_student(
     student_id: int,
     name: Optional[str] = Form(None),
@@ -492,19 +546,12 @@ async def update_student(
         conn.close()
         raise HTTPException(status_code=404, detail="Estudante não encontrado.")
 
-    final_photo = current["photo_url"]
-    if photo and photo.filename:
-        filename = f"photo-{int(datetime.datetime.now().timestamp())}-{photo.filename}"
-        filepath = os.path.join(UPLOADS_DIR, filename)
-        contents = await photo.read()
-        with open(filepath, "wb") as f:
-            f.write(contents)
-        final_photo = f"https://alfa-api.servicesbr.duckdns.org/fenec-api/uploads/{filename}"
-    elif photo_url is not None:
-        if photo_url.strip() == "":
-            final_photo = f"https://api.dicebear.com/7.x/initials/svg?seed={name or current['name']}&backgroundColor=1e3a8a,0f172a"
-        else:
-            final_photo = photo_url.strip()
+    final_photo = await process_incoming_photo(
+        photo=photo,
+        photo_url=photo_url,
+        default_name=name or current["name"],
+        fallback_photo=current["photo_url"]
+    )
 
     conn.execute("""
     UPDATE students SET

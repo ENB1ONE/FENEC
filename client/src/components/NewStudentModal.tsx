@@ -21,7 +21,7 @@ import { apiUrl } from '../api';
 interface NewStudentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (updatedStudent?: Student) => void;
   token: string;
   studentToEdit?: Student | null;
 }
@@ -133,6 +133,71 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
     };
   }, []);
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const processAndSetImage = async (fileOrBlob: File | Blob) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const reader = new FileReader();
+      const readPromise = new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('Falha ao ler o arquivo de imagem selecionado.'));
+        reader.readAsDataURL(fileOrBlob);
+      });
+
+      const rawDataUrl = await readPromise;
+
+      const img = new Image();
+      const loadPromise = new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error('Formato de imagem não suportado.'));
+        img.src = rawDataUrl;
+      });
+      await loadPromise;
+
+      // Resize and convert to clean JPEG portrait (max 600x800)
+      let width = img.width;
+      let height = img.height;
+      const maxW = 600;
+      const maxH = 800;
+
+      if (width > maxW || height > maxH) {
+        const ratio = Math.min(maxW / width, maxH / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Não foi possível processar canvas para imagem.');
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, 'image/jpeg', 0.88);
+      });
+
+      if (!blob) throw new Error('Falha ao compactar imagem para JPEG.');
+
+      const processedFile = new File([blob], `foto-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      setPhotoFile(processedFile);
+      setPhotoPreview(jpegDataUrl);
+    } catch (err: any) {
+      console.error('Image processing error:', err);
+      setError(err.message || 'Erro ao carregar imagem.');
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   const handleCapture = () => {
     if (!videoRef.current) return;
     const video = videoRef.current;
@@ -144,15 +209,16 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
     
     // Draw current frame
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.88);
     
     canvas.toBlob((blob) => {
       if (blob) {
         const file = new File([blob], `estudante-${Date.now()}.jpg`, { type: 'image/jpeg' });
         setPhotoFile(file);
-        setPhotoPreview(canvas.toDataURL('image/jpeg', 0.9));
+        setPhotoPreview(jpegDataUrl);
         stopCamera();
       }
-    }, 'image/jpeg', 0.9);
+    }, 'image/jpeg', 0.88);
   };
 
   const handleClose = () => {
@@ -165,12 +231,7 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setPhotoFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      processAndSetImage(file);
     }
   };
 
@@ -196,7 +257,10 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
     formData.append('notes', notes.trim());
 
     if (photoFile) {
-      formData.append('photo', photoFile);
+      formData.append('photo', photoFile, photoFile.name || 'foto.jpg');
+      if (photoPreview && photoPreview.startsWith('data:image/')) {
+        formData.append('photo_url', photoPreview);
+      }
     } else if (photoPreview) {
       formData.append('photo_url', photoPreview);
     } else {
@@ -207,12 +271,14 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
       const endpoint = studentToEdit 
         ? `/api/admin/students/${studentToEdit.id}`
         : '/api/admin/students';
-      const method = studentToEdit ? 'PUT' : 'POST';
 
+      // Use POST to avoid mobile Safari WebKit multipart PUT bugs.
+      // Send X-HTTP-Method-Override header for REST compatibility.
       const res = await fetch(apiUrl(endpoint), {
-        method,
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'X-HTTP-Method-Override': studentToEdit ? 'PUT' : 'POST'
         },
         body: formData
       });
@@ -223,7 +289,7 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
       }
 
       stopCamera();
-      onSuccess();
+      onSuccess(data.student);
       onClose();
     } catch (err: any) {
       setError(err.message || 'Erro ao salvar estudante.');
@@ -351,6 +417,7 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
                       <Upload className="w-3.5 h-3.5" />
                       <span>Enviar Arquivo</span>
                       <input 
+                        ref={fileInputRef}
                         type="file" 
                         accept="image/*" 
                         onChange={handlePhotoChange} 
@@ -361,7 +428,11 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
                     {photoPreview && (
                       <button
                         type="button"
-                        onClick={() => { setPhotoFile(null); setPhotoPreview(''); }}
+                        onClick={() => { 
+                          setPhotoFile(null); 
+                          setPhotoPreview(''); 
+                          if (fileInputRef.current) fileInputRef.current.value = '';
+                        }}
                         className="text-xs text-rose-400 hover:text-rose-300 py-2 px-2 flex items-center gap-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

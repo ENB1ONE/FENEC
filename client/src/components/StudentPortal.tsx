@@ -52,36 +52,63 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
 
   // Silent sync to keep cached student details 100% up-to-date with server
   React.useEffect(() => {
-    const activeCode = student?.codigo_uso || (student as any)?.codigoUso;
-    if (activeCode) {
-      fetch(apiUrl(`/api/public/validate/${encodeURIComponent(activeCode)}`))
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.valid && data.student) {
-            const raw = data.student;
-            setStudent(prev => {
-              if (!prev) return prev;
-              const merged: Student = {
-                ...prev,
-                ...raw,
-                name: raw.name || prev.name,
-                birth_date: raw.birthDate || raw.birth_date || prev.birth_date,
-                photo_url: raw.photoUrl || raw.photo_url || prev.photo_url,
-                valid_until: raw.validUntil || raw.valid_until || prev.valid_until,
-                codigo_uso: raw.codigoUso || raw.codigo_uso || prev.codigo_uso,
-                cpf: prev.cpf || raw.cpfMasked || raw.cpf,
-                course: raw.course || prev.course,
-                education_level: raw.educationLevel || raw.education_level || prev.education_level,
-                institution_name: raw.institutionName || raw.institution_name || prev.institution_name,
-                status: raw.status || prev.status
-              };
-              localStorage.setItem('fenec_student_data', JSON.stringify(merged));
-              return merged;
-            });
+    const syncWithServer = () => {
+      const saved = localStorage.getItem('fenec_student_data');
+      let codeToSync = student?.codigo_uso || (student as any)?.codigoUso;
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && (parsed.codigo_uso || parsed.codigoUso)) {
+            codeToSync = parsed.codigo_uso || parsed.codigoUso;
           }
-        })
-        .catch(() => {});
-    }
+        } catch {}
+      }
+
+      if (codeToSync) {
+        fetch(apiUrl(`/api/public/validate/${encodeURIComponent(codeToSync)}?t=${Date.now()}`))
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.valid && data.student) {
+              const raw = data.student;
+              setStudent(prev => {
+                if (!prev) return prev;
+                const merged: Student = {
+                  ...prev,
+                  ...raw,
+                  name: raw.name || prev.name,
+                  birth_date: raw.birthDate || raw.birth_date || prev.birth_date,
+                  photo_url: raw.photoUrl || raw.photo_url || prev.photo_url,
+                  valid_until: raw.validUntil || raw.valid_until || prev.valid_until,
+                  codigo_uso: raw.codigoUso || raw.codigo_uso || prev.codigo_uso,
+                  cpf: prev.cpf || raw.cpfMasked || raw.cpf,
+                  course: raw.course || prev.course,
+                  education_level: raw.educationLevel || raw.education_level || prev.education_level,
+                  institution_name: raw.institutionName || raw.institution_name || prev.institution_name,
+                  status: raw.status || prev.status
+                };
+                localStorage.setItem('fenec_student_data', JSON.stringify(merged));
+                return merged;
+              });
+            }
+          })
+          .catch(() => {});
+      }
+    };
+
+    syncWithServer();
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        syncWithServer();
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', syncWithServer);
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', syncWithServer);
+    };
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {

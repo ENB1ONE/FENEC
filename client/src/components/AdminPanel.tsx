@@ -564,10 +564,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onOpenValidator }) => {
           setIsNewModalOpen(false);
           setStudentToEdit(null);
         }}
-        onSuccess={() => {
+        onSuccess={(updatedStudent) => {
           loadData();
           setIsNewModalOpen(false);
           setStudentToEdit(null);
+          if (updatedStudent) {
+            if (previewStudent && (previewStudent.id === updatedStudent.id || previewStudent.codigo_uso === updatedStudent.codigo_uso)) {
+              setPreviewStudent(updatedStudent);
+            }
+            try {
+              const saved = localStorage.getItem('fenec_student_data');
+              if (saved) {
+                const cur = JSON.parse(saved);
+                if (cur.id === updatedStudent.id || cur.codigo_uso === updatedStudent.codigo_uso || cur.cpf === updatedStudent.cpf) {
+                  localStorage.setItem('fenec_student_data', JSON.stringify({
+                    ...cur,
+                    ...updatedStudent
+                  }));
+                }
+              }
+            } catch (e) {
+              console.error('Error syncing localStorage student data:', e);
+            }
+          }
         }}
         token={token}
         studentToEdit={studentToEdit}
