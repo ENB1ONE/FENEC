@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RefreshCw, Sparkles } from 'lucide-react';
 
 // Current client build timestamp
-export const CURRENT_BUILD_TIME = 1794150800000;
+export const CURRENT_BUILD_TIME = 1794151700000;
 
 export const AppUpdateManager: React.FC = () => {
   const [updating, setUpdating] = useState(false);

@@ -1,5 +1,5 @@
 // FENEC Digital - Service Worker com Atualização Forçada e Cache-Busting
-const BUILD_TIME = '1794150800000';
+const BUILD_TIME = '1794151700000';
 const CACHE_NAME = 'fenec-cache-v-' + BUILD_TIME;
 
 const STATIC_ASSETS = [
@@ -55,19 +55,27 @@ self.addEventListener('message', (event) => {
 });
 
 // Estratégia de requisição:
-// - version.json, /api e /fenec-api/ -> sempre direto da rede
-// - Páginas HTML / Navegação -> Network-First (sempre busca a versão mais recente do GitHub Pages)
-// - Assets estáticos -> Network-First com fallback de cache para uso offline
+// - Requisições POST/PUT/DELETE e chamadas para API externa (alfa-api) JAMAIS devem ser interceptadas pelo SW
+// - Apenas recursos estáticos locais GET do próprio domínio são tratados com Network-First
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-
-  // 1. Version.json e chamadas de API nunca passam pelo cache do SW
-  if (url.pathname.includes('version.json') || url.pathname.includes('/api') || url.pathname.includes('/fenec-api/')) {
-    event.respondWith(fetch(event.request, { cache: 'no-store' }));
+  // 1. NUNCA interceptar requisições que não sejam GET (POST, PUT, DELETE, PATCH, etc.)
+  if (event.request.method !== 'GET') {
     return;
   }
 
-  // 2. Requisições de navegação (HTML principal do app)
+  const url = new URL(event.request.url);
+
+  // 2. NUNCA interceptar requisições para origens externas (Backend OCI duckdns, APIs externas, etc.)
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // 3. NUNCA interceptar version.json ou chamadas de API
+  if (url.pathname.includes('version.json') || url.pathname.includes('/api') || url.pathname.includes('/fenec-api/')) {
+    return;
+  }
+
+  // 4. Requisições de navegação (HTML principal do app)
   if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(event.request)
@@ -87,11 +95,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. Demais recursos estáticos (JS, CSS, Imagens)
+  // 5. Demais recursos estáticos GET da mesma origem (JS, CSS, Imagens locais)
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET') {
+        if (networkResponse && networkResponse.status === 200) {
           const clone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
