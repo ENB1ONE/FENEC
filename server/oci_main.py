@@ -492,7 +492,7 @@ async def update_student(
         conn.close()
         raise HTTPException(status_code=404, detail="Estudante não encontrado.")
 
-    final_photo = photo_url or current["photo_url"]
+    final_photo = current["photo_url"]
     if photo and photo.filename:
         filename = f"photo-{int(datetime.datetime.now().timestamp())}-{photo.filename}"
         filepath = os.path.join(UPLOADS_DIR, filename)
@@ -500,6 +500,11 @@ async def update_student(
         with open(filepath, "wb") as f:
             f.write(contents)
         final_photo = f"https://alfa-api.servicesbr.duckdns.org/fenec-api/uploads/{filename}"
+    elif photo_url is not None:
+        if photo_url.strip() == "":
+            final_photo = f"https://api.dicebear.com/7.x/initials/svg?seed={name or current['name']}&backgroundColor=1e3a8a,0f172a"
+        else:
+            final_photo = photo_url.strip()
 
     conn.execute("""
     UPDATE students SET

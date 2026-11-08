@@ -560,8 +560,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onOpenValidator }) => {
       {/* New / Edit Student Modal */}
       <NewStudentModal
         isOpen={isNewModalOpen}
-        onClose={() => setIsNewModalOpen(false)}
-        onSuccess={loadData}
+        onClose={() => {
+          setIsNewModalOpen(false);
+          setStudentToEdit(null);
+        }}
+        onSuccess={() => {
+          loadData();
+          setIsNewModalOpen(false);
+          setStudentToEdit(null);
+        }}
         token={token}
         studentToEdit={studentToEdit}
       />

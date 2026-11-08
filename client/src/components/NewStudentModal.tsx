@@ -47,6 +47,39 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Synchronize form fields whenever modal opens or studentToEdit changes
+  useEffect(() => {
+    if (isOpen) {
+      if (studentToEdit) {
+        setName(studentToEdit.name || '');
+        setCpf(studentToEdit.cpf || (studentToEdit as any).cpfMasked || '');
+        setRg(studentToEdit.rg || '');
+        setRgUf(studentToEdit.rg_uf || 'SP');
+        setBirthDate(studentToEdit.birth_date || (studentToEdit as any).birthDate || '');
+        setRegistration(studentToEdit.registration || '');
+        setCourse(studentToEdit.course || '');
+        setEducationLevel(studentToEdit.education_level || (studentToEdit as any).educationLevel || 'Graduação');
+        setNotes(studentToEdit.notes || '');
+        setPhotoPreview(studentToEdit.photo_url || (studentToEdit as any).photoUrl || '');
+        setPhotoFile(null);
+      } else {
+        setName('');
+        setCpf('');
+        setRg('');
+        setRgUf('SP');
+        setBirthDate('');
+        setRegistration('');
+        setCourse('');
+        setEducationLevel('Graduação');
+        setNotes('');
+        setPhotoPreview('');
+        setPhotoFile(null);
+      }
+      setError(null);
+      stopCamera();
+    }
+  }, [isOpen, studentToEdit]);
+
   // Camera state
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -164,8 +197,10 @@ export const NewStudentModal: React.FC<NewStudentModalProps> = ({
 
     if (photoFile) {
       formData.append('photo', photoFile);
-    } else if (photoPreview && photoPreview.startsWith('http')) {
+    } else if (photoPreview) {
       formData.append('photo_url', photoPreview);
+    } else {
+      formData.append('photo_url', '');
     }
 
     try {
