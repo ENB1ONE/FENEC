@@ -544,80 +544,224 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
 
       {/* ========================================================
           PRINT-ONLY OFFICIAL LAYOUT (Lei nº 12.933/2013)
-          Renderizado exclusivamente na impressora ou salvar PDF
+          Layout Executivo Refinado - Cabe 100% em 1 Página A4
          ======================================================== */}
       <div className="print-only">
-        <div className="max-w-[190mm] mx-auto p-4 bg-white text-slate-900 font-sans">
-          {/* Institutional Header */}
-          <div className="border-b-2 border-slate-900 pb-3 mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-amber-400 text-slate-950 font-black text-2xl rounded-xl flex items-center justify-center border-2 border-slate-900 shadow">
+        <div className="max-w-[180mm] mx-auto p-4 bg-white text-slate-900 font-sans border-4 border-double border-slate-900 rounded-2xl shadow-none">
+          {/* Official Document Header */}
+          <div className="border-b-2 border-slate-900 pb-2 mb-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 bg-amber-400 text-slate-950 font-black text-xl rounded-xl flex items-center justify-center border-2 border-slate-900 shadow-sm flex-shrink-0">
                 F
               </div>
               <div>
-                <h1 className="text-sm font-extrabold tracking-wide uppercase text-slate-950 leading-tight">
+                <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest block">
+                  República Federativa do Brasil • Ministério da Educação
+                </span>
+                <h1 className="text-xs font-black tracking-wide uppercase text-slate-950 leading-tight">
                   FENEC — Faculdade e Escola de Negócios e Educação Continuada
                 </h1>
-                <p className="text-xs font-bold text-slate-800">
+                <p className="text-[10px] font-extrabold text-blue-900">
                   Documento de Identificação Estudantil Digital (CIE Nacional)
-                </p>
-                <p className="text-[10px] text-slate-600">
-                  Emitido em estrita conformidade com a Lei Federal nº 12.933/2013 e Decreto Federal nº 8.537/2015
                 </p>
               </div>
             </div>
 
-            <div className="text-right font-mono text-xs border-2 border-slate-900 p-2 rounded-lg bg-slate-50">
-              <span className="block text-[9px] text-slate-600 font-bold uppercase">Código CIE</span>
-              <span className="font-extrabold text-sm text-slate-950">{student.codigo_uso}</span>
-              <span className="block text-[9px] text-emerald-800 font-bold mt-0.5">STATUS: ATIVO</span>
+            <div className="text-right font-mono text-xs border-2 border-slate-900 px-2 py-1 rounded-lg bg-slate-50 flex-shrink-0">
+              <span className="block text-[7.5px] text-slate-500 font-bold uppercase">Código CIE</span>
+              <span className="font-extrabold text-xs text-slate-950 tracking-wider">{student.codigo_uso}</span>
+              <span className="block text-[7.5px] text-emerald-700 font-bold">STATUS: ATIVO</span>
             </div>
           </div>
 
-          {/* Cards Layout Vertical: Frente no topo, Verso embaixo */}
-          <div className="my-4 flex flex-col items-center">
-            <p className="text-center text-[11px] font-bold text-slate-600 mb-2">
-              ✂ Recorte no contorno externo e dobre na linha pontilhada central para plastificar no formato carteira
+          {/* Cards Section: Vertical Stack (Frente on top, Verso on bottom) */}
+          <div className="my-1.5 flex flex-col items-center">
+            <p className="text-center text-[9.5px] font-bold text-slate-600 mb-1.5 flex items-center gap-1.5">
+              <span>✂</span>
+              <span>Recorte no contorno externo e dobre na linha central para plastificar no formato carteira (85mm x 54mm)</span>
+              <span>✂</span>
             </p>
 
-            <div className="flex flex-col items-center border-2 border-dashed border-slate-400 p-3 rounded-2xl bg-slate-50">
-              {/* Card 1: FRENTE (no topo) */}
-              <div className="w-[74mm] h-[114mm] rounded-2xl overflow-hidden shadow-sm border-2 border-amber-500 bg-slate-950 text-white flex flex-col justify-between p-3.5 relative flex-shrink-0">
-                {renderCardFrontContent()}
+            {/* The Cut & Fold Enclosure */}
+            <div className="flex flex-col items-center border-2 border-dashed border-slate-400 p-2 rounded-xl bg-slate-50">
+              
+              {/* CARD 1: FRENTE (no topo) */}
+              <div className="w-[72mm] h-[102mm] rounded-xl overflow-hidden border-2 border-amber-500 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 text-white flex flex-col justify-between p-3 relative flex-shrink-0">
+                {/* Header Frente */}
+                <div className="border-b border-amber-400/40 pb-1.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs flex-shrink-0">
+                      F
+                    </div>
+                    <div>
+                      <h3 className="text-[11px] font-black tracking-wider text-amber-300 leading-none">
+                        FENEC
+                      </h3>
+                      <p className="text-[7.5px] text-slate-300 uppercase tracking-tight mt-0.5">
+                        Educação e Inovação
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-block bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[7.5px] font-bold px-1.5 py-0.5 rounded-full uppercase">
+                      Oficial • DNE
+                    </span>
+                  </div>
+                </div>
+
+                {/* Banner CIE */}
+                <div className="my-1 bg-blue-900/80 border-y border-blue-500/40 py-0.5 text-center rounded">
+                  <span className="text-[7.5px] font-bold text-cyan-200 uppercase tracking-wider">
+                    Carteira de Identificação Estudantil
+                  </span>
+                </div>
+
+                {/* Body: Photo & Data */}
+                <div className="flex gap-2.5 items-center my-auto">
+                  <div className="relative flex-shrink-0">
+                    <div className="w-[19mm] h-[25mm] rounded-lg overflow-hidden border-2 border-amber-400 bg-slate-800 shadow-sm">
+                      <img 
+                        src={student.photo_url || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.name)}`} 
+                        alt={student.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-white rounded-full p-0.5 shadow border border-slate-900">
+                      <ShieldCheck className="w-2.5 h-2.5" />
+                    </div>
+                  </div>
+
+                  <div className="flex-1 min-w-0 space-y-0.5 text-left">
+                    <div>
+                      <span className="text-[6.5px] uppercase font-bold text-slate-400 block">Nome</span>
+                      <p className="text-[10px] font-bold text-white truncate leading-tight">
+                        {student.name}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[6.5px] uppercase font-bold text-slate-400 block">Curso</span>
+                      <p className="text-[9px] font-semibold text-cyan-300 truncate leading-tight">
+                        {student.course}
+                      </p>
+                      <p className="text-[7.5px] text-slate-300">{student.education_level}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1 pt-0.5">
+                      <div>
+                        <span className="text-[6.5px] uppercase font-bold text-slate-400 block">Matrícula</span>
+                        <p className="text-[8.5px] font-mono font-bold text-amber-200">{student.registration}</p>
+                      </div>
+                      <div>
+                        <span className="text-[6.5px] uppercase font-bold text-slate-400 block">Nasc.</span>
+                        <p className="text-[8.5px] font-mono text-slate-200">{student.birth_date}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1">
+                      <div>
+                        <span className="text-[6.5px] uppercase font-bold text-slate-400 block">CPF</span>
+                        <p className="text-[8.5px] font-mono text-slate-300">{student.cpf}</p>
+                      </div>
+                      <div>
+                        <span className="text-[6.5px] uppercase font-bold text-slate-400 block">RG/UF</span>
+                        <p className="text-[8.5px] font-mono text-slate-300">{student.rg} {student.rg_uf}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Frente */}
+                <div className="border-t border-slate-700/60 pt-1 flex items-end justify-between">
+                  <div>
+                    <span className="text-[6.5px] font-bold text-amber-400 uppercase tracking-widest block">
+                      Código de Uso (Número CIE)
+                    </span>
+                    <span className="text-[10px] font-mono font-extrabold text-white tracking-wider">
+                      {student.codigo_uso}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[6.5px] text-slate-400 uppercase tracking-wider block font-semibold">Validade</span>
+                    <span className="inline-block bg-amber-400 text-slate-950 font-extrabold text-[8px] px-1.5 py-0.5 rounded shadow font-mono">
+                      {student.valid_until}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              {/* Horizontal Fold Divider */}
-              <div className="w-full my-2.5 flex items-center justify-center gap-2 border-t-2 border-dashed border-slate-400 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+              {/* DOTTED FOLD LINE DIVIDER */}
+              <div className="w-[72mm] my-1.5 flex items-center justify-between border-t-2 border-dashed border-slate-400 py-0.5 text-[8.5px] font-bold text-slate-500 uppercase tracking-wider">
                 <span>✂</span>
                 <span>Dobre Aqui (Linha Central de Dobra)</span>
                 <span>✂</span>
               </div>
 
-              {/* Card 2: VERSO (embaixo) */}
-              <div className="w-[74mm] h-[114mm] rounded-2xl overflow-hidden shadow-sm border-2 border-amber-500 bg-slate-950 text-white flex flex-col justify-between p-3.5 relative flex-shrink-0">
-                {renderCardBackContent()}
+              {/* CARD 2: VERSO (embaixo - totalmente íntegro) */}
+              <div className="w-[72mm] h-[102mm] rounded-xl overflow-hidden border-2 border-amber-500 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-950 text-white flex flex-col justify-between p-3 relative flex-shrink-0">
+                {/* Header Verso */}
+                <div className="border-b border-slate-700 pb-1 flex justify-between items-center">
+                  <div>
+                    <h3 className="text-[10.5px] font-bold text-amber-300 leading-none">Autenticação e Validação</h3>
+                    <p className="text-[7.5px] text-slate-400 mt-0.5">Padrão Nacional de Identificação</p>
+                  </div>
+                  <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[7.5px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-2.5 h-2.5" /> Certificado ICP
+                  </div>
+                </div>
+
+                {/* Center: QR Code */}
+                <div className="flex flex-col items-center justify-center my-auto py-1">
+                  <div className="bg-white p-1.5 rounded-xl border-2 border-amber-400 shadow-sm">
+                    {qrCodeUrl ? (
+                      <img src={qrCodeUrl} alt="QR Code" className="w-[28mm] h-[28mm] object-contain" />
+                    ) : (
+                      <div className="w-[28mm] h-[28mm] bg-slate-100 flex items-center justify-center text-slate-400">
+                        <QrIcon className="w-8 h-8" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-[8.5px] font-bold text-cyan-300 mt-1 flex items-center gap-1">
+                    <QrIcon className="w-3 h-3 text-amber-400" /> Aponte a câmera para validar
+                  </p>
+                  <p className="text-[9px] font-mono font-bold text-amber-300">
+                    {student.codigo_uso}
+                  </p>
+                </div>
+
+                {/* Legal text & disclaimer */}
+                <div className="text-[7.5px] text-slate-400 leading-tight space-y-0.5 border-t border-slate-800 pt-1">
+                  <p className="text-slate-300 font-semibold truncate">
+                    {student.institution_name}
+                  </p>
+                  <p className="text-[7px] leading-tight text-slate-400">
+                    Documento emitido conforme a Lei Federal nº 12.933/2013 e Decreto nº 8.537/2015. Válido em todo território nacional para comprovação acadêmica e benefício de meia-entrada estudantil.
+                  </p>
+                  <div className="flex justify-between text-[6.5px] text-slate-500 font-mono pt-0.5">
+                    <span>EMISSÃO: {student.created_at ? student.created_at.slice(0, 10) : '2026-11-08'}</span>
+                    <span className="text-emerald-400 font-bold">STATUS: {student.status}</span>
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
 
           {/* Official Validation & Legal Section */}
-          <div className="border border-slate-300 rounded-xl p-3 bg-slate-50 text-xs space-y-2 text-slate-700">
-            <h3 className="font-bold text-slate-900 uppercase tracking-wide text-xs">
+          <div className="border border-slate-300 rounded-xl p-2 bg-slate-50 text-[9px] space-y-1 text-slate-700 mt-1.5">
+            <h3 className="font-bold text-slate-900 uppercase tracking-wide text-[9px]">
               Instruções de Validação e Direitos do Estudante:
             </h3>
-            <ul className="list-disc list-inside space-y-1 text-[11px] leading-relaxed">
+            <ul className="list-disc list-inside space-y-0.5 text-[8.5px] leading-relaxed">
               <li>
-                <strong>Validação Instantânea:</strong> A autenticidade deste documento pode ser atestada apontando a câmera de qualquer smartphone para o QR Code acima ou acessando <strong>https://enb1one.github.io/FENEC/</strong> informando o Código de Uso <strong>{student.codigo_uso}</strong>.
+                <strong>Validação Instantânea:</strong> Aponte a câmera de qualquer smartphone para o QR Code acima ou acesse <strong>https://enb1one.github.io/FENEC/</strong> informando o Código de Uso <strong>{student.codigo_uso}</strong>.
               </li>
               <li>
-                <strong>Meia-Entrada Garantida:</strong> Válido em todo o território nacional para 50% de desconto em cinemas, teatros, espetáculos musicais, circos, eventos educativos, esportivos e de lazer, nos termos da Lei Federal nº 12.933/2013.
+                <strong>Meia-Entrada Garantida (Lei Federal nº 12.933/2013):</strong> 50% de desconto garantido em cinemas, teatros, espetáculos musicais, circenses e eventos educativos e esportivos.
               </li>
               <li>
-                <strong>Validade do Documento:</strong> Válido até <strong>{student.valid_until}</strong> (31 de março do ano subsequente à expedição).
+                <strong>Validade Legal:</strong> Válido em todo o Brasil até <strong>{student.valid_until}</strong>.
               </li>
             </ul>
 
-            <div className="pt-2 border-t border-slate-200 flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="pt-1 border-t border-slate-200 flex justify-between text-[7.5px] font-mono text-slate-500">
               <span>Emissão: {student.created_at ? student.created_at.slice(0, 10) : '2026-11-08'}</span>
               <span>Certificação Digital FENEC • Registro: {student.registration}</span>
               <span>Impresso em: {new Date().toLocaleDateString('pt-BR')}</span>
