@@ -151,6 +151,8 @@
   .print-only {
     display: block !important;
     visibility: visible !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
 

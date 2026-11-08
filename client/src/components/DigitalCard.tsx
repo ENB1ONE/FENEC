@@ -574,25 +574,27 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({ student, onOpenValidat
             </div>
           </div>
 
-          {/* Cards Layout Side-by-Side with Fold Line */}
-          <div className="my-5">
-            <p className="text-center text-xs font-bold text-slate-600 mb-2">
-              ✂ Recorte no retângulo externo e dobre ao meio para plastificar (tamanho padrão de carteira 85mm x 54mm)
+          {/* Cards Layout Vertical: Frente no topo, Verso embaixo */}
+          <div className="my-4 flex flex-col items-center">
+            <p className="text-center text-[11px] font-bold text-slate-600 mb-2">
+              ✂ Recorte no contorno externo e dobre na linha pontilhada central para plastificar no formato carteira
             </p>
 
-            <div className="flex justify-center items-stretch border-2 border-dashed border-slate-400 p-4 rounded-xl bg-slate-100 gap-4">
-              {/* Card Frente */}
-              <div className="w-[78mm] h-[122mm] rounded-2xl overflow-hidden shadow-md border-2 border-amber-500 bg-slate-950 text-white flex flex-col justify-between p-4 flex-shrink-0 relative">
+            <div className="flex flex-col items-center border-2 border-dashed border-slate-400 p-3 rounded-2xl bg-slate-50">
+              {/* Card 1: FRENTE (no topo) */}
+              <div className="w-[74mm] h-[114mm] rounded-2xl overflow-hidden shadow-sm border-2 border-amber-500 bg-slate-950 text-white flex flex-col justify-between p-3.5 relative flex-shrink-0">
                 {renderCardFrontContent()}
               </div>
 
-              {/* Fold Divider */}
-              <div className="flex flex-col items-center justify-center px-2 border-r-2 border-dashed border-slate-400 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                <span className="rotate-90 whitespace-nowrap">✂ Dobrar Aqui</span>
+              {/* Horizontal Fold Divider */}
+              <div className="w-full my-2.5 flex items-center justify-center gap-2 border-t-2 border-dashed border-slate-400 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                <span>✂</span>
+                <span>Dobre Aqui (Linha Central de Dobra)</span>
+                <span>✂</span>
               </div>
 
-              {/* Card Verso */}
-              <div className="w-[78mm] h-[122mm] rounded-2xl overflow-hidden shadow-md border-2 border-amber-500 bg-slate-950 text-white flex flex-col justify-between p-4 flex-shrink-0 relative">
+              {/* Card 2: VERSO (embaixo) */}
+              <div className="w-[74mm] h-[114mm] rounded-2xl overflow-hidden shadow-sm border-2 border-amber-500 bg-slate-950 text-white flex flex-col justify-between p-3.5 relative flex-shrink-0">
                 {renderCardBackContent()}
               </div>
             </div>
