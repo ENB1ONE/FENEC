@@ -1,50 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" fill="none">
   <defs>
-    <linearGradient id="goldH" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="sqGoldH" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FEF08A" />
       <stop offset="25%" stop-color="#FACC15" />
       <stop offset="50%" stop-color="#EAB308" />
       <stop offset="75%" stop-color="#CA8A04" />
       <stop offset="100%" stop-color="#854D0E" />
     </linearGradient>
-    <linearGradient id="shieldNavyH" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="sqNavyH" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#1E293B" />
-      <stop offset="35%" stop-color="#0F172A" />
+      <stop offset="40%" stop-color="#0F172A" />
       <stop offset="100%" stop-color="#020617" />
-    </linearGradient>
-    <linearGradient id="sheenH" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.30" />
-      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.08" />
-      <stop offset="70%" stop-color="#FFFFFF" stop-opacity="0" />
     </linearGradient>
   </defs>
 
-  <!-- Crest Icon scaled on left (0 to 180) -->
-  <g transform="translate(10, 8) scale(0.32)">
-    <path d="M256 36 C376 36 448 68 448 168 C448 308 356 418 256 468 C156 418 64 308 64 168 C64 68 136 36 256 36 Z" 
-          fill="url(#shieldNavyH)" 
-          stroke="url(#goldH)" 
-          stroke-width="16" />
-    <path d="M256 58 C358 58 424 86 424 172 C424 294 344 394 256 438 C168 394 88 294 88 172 C88 86 154 58 256 58 Z" 
+  <!-- Square Emblem with Gold Border on left -->
+  <g transform="translate(14, 10) scale(0.31)">
+    <rect x="36" y="36" width="440" height="440" rx="92" 
+          fill="url(#sqNavyH)" 
+          stroke="url(#sqGoldH)" 
+          stroke-width="20" />
+    <rect x="56" y="56" width="400" height="400" rx="74" 
           fill="none" 
-          stroke="url(#goldH)" 
-          stroke-width="3" 
+          stroke="url(#sqGoldH)" 
+          stroke-width="4" 
           stroke-opacity="0.6" />
-    <g transform="translate(256, 104)">
-      <path d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="url(#goldH)" />
+    <g transform="translate(256, 110)">
+      <path d="M0 -22 L6 -6 L22 0 L6 6 L0 22 L-6 6 L-22 0 L-6 -6 Z" fill="url(#sqGoldH)" />
     </g>
     <g transform="translate(182, 142)">
-      <path d="M14 12 C14 5 19 0 26 0 L68 0 C75 0 80 5 80 12 L80 236 C80 243 75 248 68 248 L26 248 C19 248 14 243 14 236 Z" fill="url(#goldH)" />
-      <path d="M80 0 L154 0 C162 0 168 6 166 14 L160 48 C158 54 152 60 144 60 L80 60 Z" fill="url(#goldH)" />
-      <path d="M80 102 L132 102 C140 102 146 108 144 116 L138 142 C136 148 130 152 122 152 L80 152 Z" fill="url(#goldH)" />
+      <path d="M14 12 C14 5 19 0 26 0 L68 0 C75 0 80 5 80 12 L80 236 C80 243 75 248 68 248 L26 248 C19 248 14 243 14 236 Z" fill="url(#sqGoldH)" />
+      <path d="M80 0 L154 0 C162 0 168 6 166 14 L160 48 C158 54 152 60 144 60 L80 60 Z" fill="url(#sqGoldH)" />
+      <path d="M80 102 L132 102 C140 102 146 108 144 116 L138 142 C136 148 130 152 122 152 L80 152 Z" fill="url(#sqGoldH)" />
     </g>
-    <!-- Laurels -->
-    <path d="M120 310 C136 350 174 384 220 404" fill="none" stroke="url(#goldH)" stroke-width="4" stroke-linecap="round" />
-    <path d="M392 310 C376 350 338 384 292 404" fill="none" stroke="url(#goldH)" stroke-width="4" stroke-linecap="round" />
+    <path d="M120 340 C136 380 174 414 220 428" fill="none" stroke="url(#sqGoldH)" stroke-width="5" stroke-linecap="round" />
+    <path d="M392 340 C376 380 338 414 292 428" fill="none" stroke="url(#sqGoldH)" stroke-width="5" stroke-linecap="round" />
   </g>
 
   <!-- Typography Right -->
-  <text x="185" y="88" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="76" letter-spacing="4" fill="url(#goldH)">
+  <text x="185" y="88" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="76" letter-spacing="4" fill="url(#sqGoldH)">
     FENEC
   </text>
   <rect x="475" y="44" width="98" height="34" rx="8" fill="#1E3A8A" stroke="#38BDF8" stroke-width="1.5" />

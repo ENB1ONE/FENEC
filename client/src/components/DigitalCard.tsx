@@ -102,8 +102,24 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
     touchStartY.current = null;
   };
 
+  // Robust field normalization (handles snake_case from DB and camelCase from validator)
+  const anyStudent = student as any;
+  const photoUrl = student.photo_url || anyStudent.photoUrl || '';
+  const birthDate = student.birth_date || anyStudent.birthDate || '';
+  const validUntil = student.valid_until || anyStudent.validUntil || '';
+  const codigoUso = student.codigo_uso || anyStudent.codigoUso || '';
+  const cpf = student.cpf || anyStudent.cpfMasked || '';
+  const course = student.course || anyStudent.course || '';
+  const educationLevel = student.education_level || anyStudent.educationLevel || '';
+  const registration = student.registration || anyStudent.registration || '';
+  const rg = student.rg || anyStudent.rg || '';
+  const rgUf = student.rg_uf || anyStudent.rgUf || anyStudent.rg_uf || '';
+  const institutionName = student.institution_name || anyStudent.institutionName || 'FENEC - Faculdade e Escola de Negócios e Educação Continuada';
+  const studentStatus = student.status || anyStudent.status || 'ACTIVE';
+  const isActive = studentStatus === 'ACTIVE';
+
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(student.codigo_uso);
+    navigator.clipboard.writeText(codigoUso);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -117,8 +133,6 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
     minute: '2-digit',
     second: '2-digit'
   });
-
-  const isActive = student.status === 'ACTIVE';
 
   // ==========================================
   // RENDER CARD FRONT CONTENT
@@ -170,9 +184,11 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
         <div className="relative flex-shrink-0">
           <div className="w-24 h-32 rounded-xl overflow-hidden border-2 border-amber-400/80 shadow-lg bg-slate-800">
             <img 
-              src={student.photo_url || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.name)}`} 
+              src={photoUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.name)}`} 
               alt={student.name}
               className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+              crossOrigin="anonymous"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.name)}`;
               }}
@@ -187,38 +203,38 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
         <div className="flex-1 min-w-0 space-y-1 text-left">
           <div>
             <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-semibold">Nome</span>
-            <p className="text-xs sm:text-sm font-bold text-white truncate leading-tight">
+            <p className="text-xs sm:text-sm font-bold text-white leading-tight">
               {student.name}
             </p>
           </div>
 
           <div>
             <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-semibold">Curso</span>
-            <p className="text-[11px] font-semibold text-cyan-300 truncate leading-tight">
-              {student.course}
+            <p className="text-[10.5px] sm:text-[11px] font-bold text-cyan-300 leading-snug break-words">
+              {course}
             </p>
-            <p className="text-[9px] text-slate-300">{student.education_level}</p>
+            {educationLevel && <p className="text-[9px] text-slate-300">{educationLevel}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-2 pt-0.5">
             <div>
               <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-semibold">Matrícula</span>
-              <p className="text-[11px] font-mono font-bold text-amber-200">{student.registration}</p>
+              <p className="text-[11px] font-mono font-bold text-amber-200">{registration}</p>
             </div>
             <div>
               <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-semibold">Nascimento</span>
-              <p className="text-[11px] font-mono text-slate-200">{student.birth_date}</p>
+              <p className="text-[11px] font-mono font-bold text-slate-100">{birthDate}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
               <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-semibold">CPF</span>
-              <p className="text-[10px] font-mono text-slate-300">{student.cpf}</p>
+              <p className="text-[10px] font-mono text-slate-200">{cpf}</p>
             </div>
             <div>
               <span className="text-[8px] uppercase tracking-wider text-slate-400 block font-semibold">RG / UF</span>
-              <p className="text-[10px] font-mono text-slate-300">{student.rg} {student.rg_uf}</p>
+              <p className="text-[10px] font-mono text-slate-200">{rg} {rgUf ? `/${rgUf}` : ''}</p>
             </div>
           </div>
         </div>
@@ -231,7 +247,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
             Código de Uso (Número CIE)
           </span>
           <span className="text-xs sm:text-sm font-mono font-extrabold text-white tracking-wider">
-            {student.codigo_uso}
+            {codigoUso}
           </span>
         </div>
 
@@ -247,7 +263,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
           <div className="text-right">
             <span className="text-[8px] text-slate-400 uppercase tracking-wider block font-semibold">Validade</span>
             <span className="inline-block bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-extrabold text-xs px-2.5 py-0.5 rounded-md shadow font-mono">
-              {student.valid_until}
+              {validUntil}
             </span>
           </div>
         </div>
@@ -285,7 +301,7 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
       {/* Center: QR Code & Verification Info */}
       <div className="relative z-20 flex flex-col items-center justify-center my-auto py-1">
         <a
-          href={`https://enb1one.github.io/FENEC/?codigo=${encodeURIComponent(student.codigo_uso)}`}
+          href={`https://enb1one.github.io/FENEC/?codigo=${encodeURIComponent(codigoUso)}`}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
@@ -307,21 +323,21 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
           <QrIcon className="w-3.5 h-3.5" /> Aponte a câmera para validar
         </p>
         <p className="text-[10px] font-mono text-slate-400 mt-0.5">
-          {student.codigo_uso}
+          {codigoUso}
         </p>
       </div>
 
       {/* Legal text & disclaimer */}
       <div className="relative z-20 text-[9px] text-slate-400 leading-tight space-y-1 border-t border-slate-800 pt-2">
         <p className="text-slate-300 font-semibold truncate">
-          {student.institution_name}
+          {institutionName}
         </p>
         <p className="text-[8px] sm:text-[9px] text-slate-400 leading-tight">
           Documento emitido conforme a Lei Federal nº 12.933/2013 e Decreto nº 8.537/2015. Válido em todo território nacional para comprovação acadêmica e benefício de meia-entrada estudantil.
         </p>
         <div className="flex justify-between text-[8px] text-slate-500 font-mono pt-0.5">
           <span>EMISSÃO: {student.created_at ? student.created_at.slice(0, 10) : '2026-11-08'}</span>
-          <span className="text-emerald-400 font-bold">STATUS: {student.status}</span>
+          <span className="text-emerald-400 font-bold">STATUS: {studentStatus}</span>
         </div>
       </div>
 
@@ -382,9 +398,9 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
           </div>
 
           {/* Centered Carteirinha with Touch Swipe Support */}
-          <div className="my-auto w-full max-w-sm py-2">
+          <div className="my-auto w-full max-w-sm py-4">
             <div 
-              className="w-full card-perspective cursor-pointer"
+              className="w-full card-perspective cursor-pointer select-none"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
               onClick={() => setIsFlipped(!isFlipped)}
@@ -398,63 +414,6 @@ export const DigitalCard: React.FC<DigitalCardProps> = ({
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Bottom Bar: Touch swipe guidance and side toggle */}
-          <div className="w-full max-w-sm flex flex-col items-center gap-2 py-2 border-t border-slate-800">
-            <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-300">
-              <button
-                type="button"
-                onClick={() => setIsFlipped(false)}
-                className={`px-3 py-1 rounded-lg text-xs transition-colors ${!isFlipped ? 'bg-amber-500 text-slate-950 font-extrabold shadow' : 'text-slate-400 hover:text-white'}`}
-              >
-                1. Frente
-              </button>
-              <span className="text-slate-600">•</span>
-              <button
-                type="button"
-                onClick={() => setIsFlipped(true)}
-                className={`px-3 py-1 rounded-lg text-xs transition-colors ${isFlipped ? 'bg-blue-600 text-white font-extrabold shadow' : 'text-slate-400 hover:text-white'}`}
-              >
-                2. Verso (QR Code)
-              </button>
-            </div>
-
-            {/* Quick action tools right in fullscreen */}
-            <div className="grid grid-cols-3 gap-2 w-full pt-0.5">
-              <button
-                type="button"
-                onClick={() => setIsFlipped(!isFlipped)}
-                className="flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs py-2 px-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
-              >
-                <RotateCw className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Girar</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleCopyCode}
-                className="flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs py-2 px-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-400" />}
-                <span>{copied ? 'Copiado!' : 'Código'}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs py-2 px-2 rounded-xl border border-slate-800 transition-colors shadow-sm"
-              >
-                <Printer className="w-3.5 h-3.5 text-amber-400" />
-                <span>Imprimir</span>
-              </button>
-            </div>
-
-            <p className="text-[11px] text-slate-400 flex items-center gap-1.5 text-center">
-              <span>👉</span>
-              <span><strong>Passe o dedo</strong> ou toque no cartão para virar</span>
-              <span>👈</span>
-            </p>
           </div>
         </div>
       )}

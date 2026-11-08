@@ -24,7 +24,20 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
     const saved = localStorage.getItem('fenec_student_data');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const raw = JSON.parse(saved);
+        return {
+          ...raw,
+          name: raw.name,
+          birth_date: raw.birth_date || raw.birthDate || '',
+          photo_url: raw.photo_url || raw.photoUrl || '',
+          valid_until: raw.valid_until || raw.validUntil || '',
+          codigo_uso: raw.codigo_uso || raw.codigoUso || '',
+          cpf: raw.cpf || raw.cpfMasked || '',
+          course: raw.course || '',
+          education_level: raw.education_level || raw.educationLevel || '',
+          institution_name: raw.institution_name || raw.institutionName || 'FENEC - Faculdade e Escola de Negócios e Educação Continuada',
+          status: raw.status || 'ACTIVE'
+        };
       } catch {
         return null;
       }
@@ -39,18 +52,37 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
 
   // Silent sync to keep cached student details 100% up-to-date with server
   React.useEffect(() => {
-    if (student?.codigo_uso) {
-      fetch(apiUrl(`/api/public/validate/${encodeURIComponent(student.codigo_uso)}`))
+    const activeCode = student?.codigo_uso || (student as any)?.codigoUso;
+    if (activeCode) {
+      fetch(apiUrl(`/api/public/validate/${encodeURIComponent(activeCode)}`))
         .then(res => res.json())
         .then(data => {
           if (data && data.valid && data.student) {
-            setStudent(data.student);
-            localStorage.setItem('fenec_student_data', JSON.stringify(data.student));
+            const raw = data.student;
+            setStudent(prev => {
+              if (!prev) return prev;
+              const merged: Student = {
+                ...prev,
+                ...raw,
+                name: raw.name || prev.name,
+                birth_date: raw.birthDate || raw.birth_date || prev.birth_date,
+                photo_url: raw.photoUrl || raw.photo_url || prev.photo_url,
+                valid_until: raw.validUntil || raw.valid_until || prev.valid_until,
+                codigo_uso: raw.codigoUso || raw.codigo_uso || prev.codigo_uso,
+                cpf: prev.cpf || raw.cpfMasked || raw.cpf,
+                course: raw.course || prev.course,
+                education_level: raw.educationLevel || raw.education_level || prev.education_level,
+                institution_name: raw.institutionName || raw.institution_name || prev.institution_name,
+                status: raw.status || prev.status
+              };
+              localStorage.setItem('fenec_student_data', JSON.stringify(merged));
+              return merged;
+            });
           }
         })
         .catch(() => {});
     }
-  }, [student?.codigo_uso]);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,8 +109,23 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
         throw new Error(data.detail || data.error || 'Falha ao autenticar.');
       }
 
-      setStudent(data.student);
-      localStorage.setItem('fenec_student_data', JSON.stringify(data.student));
+      const raw = data.student;
+      const normalizedStudent: Student = {
+        ...raw,
+        name: raw.name,
+        birth_date: raw.birth_date || raw.birthDate || '',
+        photo_url: raw.photo_url || raw.photoUrl || '',
+        valid_until: raw.valid_until || raw.validUntil || '',
+        codigo_uso: raw.codigo_uso || raw.codigoUso || '',
+        cpf: raw.cpf || raw.cpfMasked || '',
+        course: raw.course || '',
+        education_level: raw.education_level || raw.educationLevel || '',
+        institution_name: raw.institution_name || raw.institutionName || 'FENEC - Faculdade e Escola de Negócios e Educação Continuada',
+        status: raw.status || 'ACTIVE'
+      };
+
+      setStudent(normalizedStudent);
+      localStorage.setItem('fenec_student_data', JSON.stringify(normalizedStudent));
       if (data.token) {
         localStorage.setItem('fenec_student_token', data.token);
       }
