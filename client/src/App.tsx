@@ -96,23 +96,25 @@ export function App() {
       {/* Forced PWA & Browser Auto-Update Manager */}
       <AppUpdateManager />
 
-      {/* Footer */}
-      <footer className="w-full border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-400 no-print">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 flex-shrink-0">
-              <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
+      {/* Footer (oculto na aba validador para layout limpo e dedicado) */}
+      {currentTab !== 'validator' && (
+        <footer className="w-full border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-400 no-print">
+          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 flex-shrink-0">
+                <img src="./logo-fenec.svg" alt="FENEC" className="w-full h-full object-contain" />
+              </div>
+              <span className="font-bold text-slate-300">
+                FENEC — Faculdade e Escola de Negócios e Educação Continuada
+              </span>
             </div>
-            <span className="font-bold text-slate-300">
-              FENEC — Faculdade e Escola de Negócios e Educação Continuada
-            </span>
-          </div>
 
-          <p className="text-slate-400">
-            Validação oficial conforme Lei Federal nº 12.933/2013 e Decreto nº 8.537/2015.
-          </p>
-        </div>
-      </footer>
+            <p className="text-slate-400">
+              Validação oficial conforme Lei Federal nº 12.933/2013 e Decreto nº 8.537/2015.
+            </p>
+          </div>
+        </footer>
+      )}
     </div>
   );
 }
