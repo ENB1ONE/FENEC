@@ -84,7 +84,7 @@ export const StudentPortal: React.FC<StudentPortalProps> = ({ onOpenValidator })
     return (
       <div className="w-full max-w-2xl mx-auto py-2">
         {/* Welcome & Logout header */}
-        <div className="flex items-center justify-between bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-6 backdrop-blur shadow-md">
+        <div className="flex items-center justify-between bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 mb-6 backdrop-blur shadow-md no-print">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center font-bold">
               <GraduationCap className="w-6 h-6" />

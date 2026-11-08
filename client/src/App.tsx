@@ -83,7 +83,7 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-400">
+      <footer className="w-full border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-400 no-print">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-md bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs">

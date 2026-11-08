@@ -11,7 +11,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onChangeTab
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full bg-slate-900/95 border-b border-slate-800 backdrop-blur shadow-md">
+    <header className="sticky top-0 z-40 w-full bg-slate-900/95 border-b border-slate-800 backdrop-blur shadow-md no-print">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo and Brand */}
         <div 
